@@ -12,6 +12,7 @@ import org.apache.http.util.EntityUtils;
 public class ExtratorDeputado {
 
 	private ArrayList<String> listaLinks = new ArrayList<String>();
+	private ArrayList<Deputado> listaDeputados = new ArrayList<Deputado>();
 
 	public ArrayList<String> getListaLinks() {
 		return listaLinks;
@@ -65,5 +66,88 @@ public class ExtratorDeputado {
 		}
 
 	}
+	
+	public void extrairDadosCandidato(String url){
+		
+		String conteudo = "";
+		DefaultHttpClient client = new DefaultHttpClient();
+		HttpGet request = new HttpGet(url);
+		
+		HttpResponse response;
+		try {
+			response = client.execute(request);
+			HttpEntity entity = response.getEntity();			
+
+			conteudo = EntityUtils.toString(entity);
+			
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		StringTokenizer st = new StringTokenizer(conteudo, "<>");		
+		Deputado deputado = new Deputado();
+		
+		String atual;
+		while(st.hasMoreTokens()){
+			atual = st.nextToken();
+			
+			if(atual.contains("h1 class=\"title\"")){
+				deputado.setNomePolitico(st.nextToken());			
+			}
+			
+			else if(atual.contains("span class=\"subtitle\"")){
+				deputado.setPartido(st.nextToken());
+			}
+			
+			else if(atual.contains("div class=\"resume\"")){
+				st.nextToken();
+				st.nextToken();
+				deputado.setDescrição(st.nextToken());
+				System.out.println("Partido = " + deputado.getPartido());
+			}
+			
+			else if(atual.contains("Naturalidade")){
+				st.nextToken();
+				st.nextToken();
+				deputado.setNaturalidade(st.nextToken());
+			}
+						
+			else if(atual.contains("Nome civil:")){
+				st.nextToken();
+				st.nextToken();
+				deputado.setNomeCivil(st.nextToken());			
+			}
+			
+			else if(atual.contains("E-mail:")){
+				st.nextToken();
+				st.nextToken();
+				deputado.setEmail(st.nextToken());					
+			}
+			
+			else if(atual.contains("Aniversário")){
+				st.nextToken();
+				st.nextToken();
+				deputado.setAniversário(st.nextToken());			
+			}
+			
+			else if(atual.contains("Profissão")){
+				st.nextToken();
+				st.nextToken();
+				deputado.setProfissão(st.nextToken());			
+			}
+			
+			else if(atual.contains("Telefone")){
+				st.nextToken();
+				st.nextToken();
+				deputado.setTelefone(st.nextToken());
+			}
+		}
+		
+	}
+	
+	
 
 }

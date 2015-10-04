@@ -28,19 +28,33 @@ public class ExtratorProposicoes {
 		this.listaLinksProp = listaLinksProp;
 	}
 	
-	public void capturarLinks(String url, String autor) {
+	public void capturarLinks(String url, String tipoProp, String autor, String tipoPes, int numPagina) {
 
 		String conteudo = "";
 		DefaultHttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(url);
+		HttpPost httpPost = new HttpPost("http://www.alepe.pe.gov.br/proposicoes/");
+		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+		nvps.add(new BasicNameValuePair("field-tipo-filtro", tipoProp));
+		nvps.add(new BasicNameValuePair("field-proposicoes-filtro", tipoPes));
+		nvps.add(new BasicNameValuePair("field-proposicoes", autor));
+		nvps.add(new BasicNameValuePair("pagina", Integer.toString(numPagina)));
 
-		HttpResponse response;
 		try {
-			response = client.execute(request);
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+			HttpResponse response = client.execute(httpPost);
 			HttpEntity entity = response.getEntity();
 			conteudo = EntityUtils.toString(entity);
+			//System.out.println(conteudo);			
 			
-			salvarLinks(conteudo, autor);
+			if(numPagina == 1){
+				int numPaginas = salvarLinks(conteudo, autor, true);
+				for (int i = 2; i < numPaginas + 1; i++) {
+					this.capturarLinks(url, tipoProp, autor, tipoPes, i);
+				}
+			}
+			else{
+				salvarLinks(conteudo, autor, false);
+			}
 
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -52,48 +66,48 @@ public class ExtratorProposicoes {
 		
 	}	
 	
-	private void salvarLinks(String conteudo, String autor){
-
+	private int salvarLinks(String conteudo, String autor, boolean primeiraConsulta){
+		
+		int numPaginas = 0;
 		StringTokenizer st = new StringTokenizer(conteudo,"<>");
 		String atual;
-
 		while(st.hasMoreTokens()){
-			atual = st.nextToken();
+			atual = st.nextToken();		
 			
-			if(atual.equals("tr")){
-				//System.out.println("Aqui");
-				while(st.hasMoreTokens()){
-					atual = st.nextToken();			
-					if(atual.contains(autor)){
-						while(st.hasMoreTokens()){
-							atual = st.nextToken();
-							if(atual.contains("a href=/proposicao-texto-completo/")){
-								atual = atual.replace("'", "");
-								atual = atual.replace("a href=", "http://www.alepe.pe.gov.br");
-								String link = "";
-								for (char c : atual.toCharArray()) {
-									
-									if (c == '&'){
-										break;
-									}
-									link += c;
-									
-								}
-								//atual = atual.replace(" title=\"\"","");
-								listaLinksProp.add(link);		
-							}
-							
-							else if (atual.contains("tr")){
-								break;
-							}
-						}
-						
+			if(atual.contains("Exibindo") && primeiraConsulta == true){
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
+				atual = st.nextToken();
+				numPaginas = (Integer.parseInt(atual) / 25) + 1;
+				System.out.println(numPaginas);
+			}
+			
+			else if(atual.contains("a href=/proposicao-texto-completo/")){
+				atual = atual.replace("'", "");
+				atual = atual.replace("a href=", "http://www.alepe.pe.gov.br");
+				String url = "";
+				for (char c : atual.toCharArray()) {									
+					if (c == '&'){
 						break;
 					}
+					url += c;
+										
 				}
+				listaLinksProp.add(url);
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
+				st.nextToken();
 			}
+		
 		}
-
+		return numPaginas;
 	}
 	
 
