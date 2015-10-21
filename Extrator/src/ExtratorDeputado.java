@@ -13,6 +13,14 @@ public class ExtratorDeputado {
 
 	private ArrayList<String> listaLinks = new ArrayList<String>();
 	private ArrayList<Deputado> listaDeputados = new ArrayList<Deputado>();
+	
+	public ArrayList<Deputado> getListaDeputados() {
+		return listaDeputados;
+	}
+
+	public void setListaDeputados(ArrayList<Deputado> listaDeputados) {
+		this.listaDeputados = listaDeputados;
+	}
 
 	public ArrayList<String> getListaLinks() {
 		return listaLinks;
@@ -60,6 +68,7 @@ public class ExtratorDeputado {
 				atual = atual.replace("'", "");
 				atual = atual.replace("a href=", "http://www.alepe.pe.gov.br");
 				atual = atual.replace(" title=\"\"","");
+				atual = atual.replace(" class=\"parlamentares-list-a\"","");
 				listaLinks.add(atual);	
 
 			}
@@ -106,10 +115,10 @@ public class ExtratorDeputado {
 				st.nextToken();
 				st.nextToken();
 				deputado.setDescrição(st.nextToken());
-				System.out.println("Partido = " + deputado.getPartido());
 			}
 			
 			else if(atual.contains("Naturalidade")){
+				st.nextToken();
 				st.nextToken();
 				st.nextToken();
 				deputado.setNaturalidade(st.nextToken());
@@ -118,10 +127,12 @@ public class ExtratorDeputado {
 			else if(atual.contains("Nome civil:")){
 				st.nextToken();
 				st.nextToken();
+				st.nextToken();
 				deputado.setNomeCivil(st.nextToken());			
 			}
 			
 			else if(atual.contains("E-mail:")){
+				st.nextToken();
 				st.nextToken();
 				st.nextToken();
 				deputado.setEmail(st.nextToken());					
@@ -130,10 +141,12 @@ public class ExtratorDeputado {
 			else if(atual.contains("Aniversário")){
 				st.nextToken();
 				st.nextToken();
+				st.nextToken();
 				deputado.setAniversário(st.nextToken());			
 			}
 			
 			else if(atual.contains("Profissão")){
+				st.nextToken();
 				st.nextToken();
 				st.nextToken();
 				deputado.setProfissão(st.nextToken());			
@@ -142,9 +155,12 @@ public class ExtratorDeputado {
 			else if(atual.contains("Telefone")){
 				st.nextToken();
 				st.nextToken();
+				st.nextToken();
 				deputado.setTelefone(st.nextToken());
 			}
 		}
+		
+		listaDeputados.add(deputado);
 		
 	}
 	

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class Deputado {
 	
@@ -10,6 +12,16 @@ public class Deputado {
 	private String aniversário; 
 	private String profissão;
 	private String telefone;
+	private ArrayList<Proposicao> proposicoes = new ArrayList<Proposicao>();
+	
+	
+	
+	public ArrayList<Proposicao> getProposicoes() {
+		return proposicoes;
+	}
+	public void setProposicoes(ArrayList<Proposicao> proposicoes) {
+		this.proposicoes = proposicoes;
+	}
 	public String getNomePolitico() {
 		return nomePolitico;
 	}
