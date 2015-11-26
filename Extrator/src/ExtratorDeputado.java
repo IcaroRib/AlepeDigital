@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -76,7 +77,7 @@ public class ExtratorDeputado {
 
 	}
 	
-	public void extrairDadosCandidato(String url){
+	public Deputado extrairDadosCandidato(String url){
 		
 		String conteudo = "";
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -160,7 +161,17 @@ public class ExtratorDeputado {
 			}
 		}
 		
+		DBDeputado db = new DBDeputado();
+		try {
+			int idDeputado = db.inserirDeputado(deputado);
+			deputado.setIdDeputado(idDeputado);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		listaDeputados.add(deputado);
+		return deputado;
 		
 	}
 	

@@ -115,12 +115,14 @@ public class ExtratorProposicoes {
 				st.nextToken();
 				st.nextToken();
 			}
-		
+		break;
 		}
 		return numPaginas;
 	}
 	
-	public void ExtrairDadosProp(String url){
+	public void ExtrairDadosProp(String url, int idAutor){
+		
+		System.out.println("Aqui");
 		
 		String conteudo = "";
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -244,6 +246,7 @@ public class ExtratorProposicoes {
 		}
 		prop.setDescricaoCompleta(texto);
 		prop.setJustificativa(justificativa);
+		prop.setIdAutor(idAutor);
 		this.listaProposicoes.add(prop);
 		
 	}

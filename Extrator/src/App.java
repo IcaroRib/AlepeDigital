@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 
 public class App {
 	
@@ -10,7 +12,8 @@ public class App {
 		ed.capturarLinks("http://www.alepe.pe.gov.br/parlamentares/");
 		for (String url : ed.getListaLinks()) {
 			System.out.println("Extraindo deputados URL = " + url);
-			ed.extrairDadosCandidato(url);
+			Deputado deputado = ed.extrairDadosCandidato(url);
+			break;
 		}
 		
 		for (Deputado deputado : ed.getListaDeputados()) {
@@ -18,7 +21,7 @@ public class App {
 			Proposicao prop = new Proposicao();
 			ep.capturarLinks("http://www.alepe.pe.gov.br/proposicoes/", "Qualquer tipo", deputado.getNomePolitico(), "Por Autor", 1);
 			for (String url : ep.getListaLinksProp()) {
-				ep.ExtrairDadosProp(url);
+				ep.ExtrairDadosProp(url, deputado.getIdDeputado());
 			}
 			deputado.setProposicoes(ep.getListaProposicoes());
 		}

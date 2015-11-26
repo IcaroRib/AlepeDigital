@@ -12,7 +12,8 @@ public class Deputado {
 	private String aniversário; 
 	private String profissão;
 	private String telefone;
-	private ArrayList<Proposicao> proposicoes = new ArrayList<Proposicao>();
+	private int idDeputado;
+	private ArrayList<Proposicao> proposicoes= new ArrayList<Proposicao>();
 	
 	
 	
@@ -75,6 +76,12 @@ public class Deputado {
 	}
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
+	}
+	public int getIdDeputado() {
+		return idDeputado;
+	}
+	public void setIdDeputado(int idDeputado) {
+		this.idDeputado = idDeputado;
 	}
 	
 	
