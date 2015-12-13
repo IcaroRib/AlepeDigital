@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -20,7 +21,7 @@ public class ExtratorProposicoes {
 	
 	private ArrayList<String> listaLinksProp = new ArrayList<String>();
 	private ArrayList<Proposicao> listaProposicoes = new ArrayList<Proposicao>();	
-	private String[] tagsFixas = {"Result. 1ª Disc.:","Result. 2ª Disc.:","Resultado Final:",};
+	private String[] tagsFixas = {"Result. 1ª Disc.:","Result. 2ª Disc.:","Resultado Final:"};
 	
 	public ArrayList<Proposicao> getListaProposicoes() {
 		return listaProposicoes;
@@ -58,9 +59,9 @@ public class ExtratorProposicoes {
 			
 			if(numPagina == 1){
 				int numPaginas = salvarLinks(conteudo, autor, true);
-				for (int i = 2; i < numPaginas + 1; i++) {
+				/*for (int i = 2; i < numPaginas + 1; i++) {
 					this.capturarLinks(url, tipoProp, autor, tipoPes, i);
-				}
+				}*/
 			}
 			else{
 				salvarLinks(conteudo, autor, false);
@@ -83,7 +84,6 @@ public class ExtratorProposicoes {
 		String atual;
 		while(st.hasMoreTokens()){
 			atual = st.nextToken();		
-			
 			if(atual.contains("Exibindo") && primeiraConsulta == true){
 				st.nextToken();
 				st.nextToken();
@@ -115,15 +115,12 @@ public class ExtratorProposicoes {
 				st.nextToken();
 				st.nextToken();
 			}
-		break;
 		}
 		return numPaginas;
 	}
 	
-	public void ExtrairDadosProp(String url, int idAutor){
-		
-		System.out.println("Aqui");
-		
+	public void ExtrairDadosProp(String url, int idAutor){		
+		System.out.println(url);
 		String conteudo = "";
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);
@@ -150,14 +147,15 @@ public class ExtratorProposicoes {
 		boolean textoCompleto = true;
 		while(st.hasMoreTokens()){
 			atual = st.nextToken();	
-			
-			if(atual.contains("td class=\"td-bold\"")){
+			//System.out.println(atual);
+			if(atual.contains("td-bold")){
 				atual = st.nextToken();
-				if(atual.equals("Situação do Trâmite:")){
+				if(atual.contains("Situação do Trâmite")){
 					st.nextToken();
 					st.nextToken();
 					st.nextToken();
 					prop.setSituacaoTramite(st.nextToken());
+					System.out.println("Situação: " + prop.getSituacaoTramite());
 				}
 				
 				else if(atual.contains("Localização")){
@@ -166,19 +164,20 @@ public class ExtratorProposicoes {
 					st.nextToken();
 					String localizacao = st.nextToken();
 					prop.setLocalizacao(localizacao);
+					System.out.println("Localização: " + prop.getLocalizacao());
 				}
 				
-				else if(atual.contains("1ª Publicação")){
+				else if(atual.contains("Publicação")){
 					st.nextToken();
 					st.nextToken();
 					st.nextToken();
 					String dataPub = st.nextToken();
 					prop.setDataPublicacao(dataPub);
-					//System.out.println("Data Publicacao: " + prop.getDataPublicacao());
+					System.out.println("Data Publicacao: " + prop.getDataPublicacao());
 				}
 			}	
 			
-			else if(atual.contains("h2 class=\"title\"")){
+			else if(atual.contains("h2 class")){
 				String tipoProp = st.nextToken();
 				if (tipoProp.contains("Proposi")){
 					continue;
@@ -186,6 +185,7 @@ public class ExtratorProposicoes {
 				}else{
 					tipoProp = tipoProp.substring(0, tipoProp.length()-1);
 					prop.setTipoProp(tipoProp);
+					System.out.println("Tipo da proposição: " + prop.getTipoProp());
 					
 					st.nextToken();
 					st.nextToken();
@@ -202,7 +202,52 @@ public class ExtratorProposicoes {
 				}
 			}
 			
-			else if(atual.contains("Justificativa")){
+			if (atual.contains("h3 class")){
+				atual = st.nextToken();
+				if(atual.contains("Texto Completo")){
+					st.nextToken();
+					st.nextToken();
+					st.nextToken();
+					st.nextToken();
+					st.nextToken();
+					while(st.hasMoreTokens()){			
+						String proximo = st.nextToken();
+						if (proximo.contains("/div")){
+							break;
+						}
+						else if(proximo.contains("br /")){
+							continue;
+						}
+						else{
+							texto += proximo;
+						}
+					}
+					
+				}
+				
+				else if(atual.contains("Justificativa")){
+					st.nextToken();
+					st.nextToken();
+					st.nextToken();
+					st.nextToken();
+					st.nextToken();
+					while(st.hasMoreTokens()){			
+						String proximo = st.nextToken();
+						if (proximo.contains("/div")){
+							break;
+						}
+						else if(proximo.contains("br /")){
+							continue;
+						}
+						else{
+							justificativa += proximo.replace("   ","");
+						}
+					}
+					
+				}
+			}
+			
+			/*if(atual.contains("Justificativa")){
 				textoCompleto = false;
 			}
 			
@@ -215,7 +260,7 @@ public class ExtratorProposicoes {
 				else if(proximo.contains("br /") && textoCompleto == false){
 					justificativa +=atual.replace("br /", "");
 				}
-			}
+			}*/
 
 			for (String tag : tagsFixas) {
 				
@@ -241,13 +286,23 @@ public class ExtratorProposicoes {
 					data = st.nextToken();
 					prop.getResultadoDiscussoes().put(data, resultado);
 				}
-			}
-						
+			}				
+			
 		}
 		prop.setDescricaoCompleta(texto);
 		prop.setJustificativa(justificativa);
 		prop.setIdAutor(idAutor);
 		this.listaProposicoes.add(prop);
+		DBProposicoes db = new DBProposicoes();
+		try {
+			db.inserirProposicao(prop);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

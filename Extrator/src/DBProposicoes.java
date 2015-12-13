@@ -44,7 +44,7 @@ private java.sql.Connection conn;
 		
 		int idStatus = 0;
 		String sql = "SELECT idStatus FROM status WHERE localizacao = '" + proposicao.getLocalizacao() 
-				+ "' and situacaoTramite = '" + proposicao.getSituacaoTramite()	+ "')";
+				+ "' and situacaoTramite = '" + proposicao.getSituacaoTramite()	+ "'";
 		Statement st = conn.createStatement();
 		System.out.println(sql);
 		ResultSet rs = st.executeQuery(sql);
@@ -67,7 +67,7 @@ private java.sql.Connection conn;
 		
 		String sql = "INSERT INTO status (situacaoTramite, localizacao) VALUES (" 
 					+ "'" + proposicao.getSituacaoTramite() + "'"
-					+ "'" + proposicao.getLocalizacao() + "')";
+					+ ",'" + proposicao.getLocalizacao() + "')";
 		Statement st = conn.createStatement();
 		System.out.println(sql);
 		idStatus = st.executeUpdate(sql,1);
@@ -76,14 +76,14 @@ private java.sql.Connection conn;
 		
 	}
 	
-	public int inserirProposicao(Proposicao proposicao) throws SQLException{
+	public int inserirProposicao(Proposicao proposicao) throws SQLException, ClassNotFoundException{
 		
+		conn = Connection.connect();		
 		int idStatus = this.inserirStatus(proposicao);
 		
-		String sql = "INSERT INTO proposicao (texto, justificativa, resumo, dataPublicacao, numeroProposicao, idStatus, idDeputado) VALUES ("
+		String sql = "INSERT INTO proposicao (texto, justificativa, dataPublicacao, numeroProposicao, idStatus, idDeputado) VALUES ("
 				     + "'" + proposicao.getDescricaoCompleta()  + "', "
 				     + "'" + proposicao.getJustificativa() + "', "
-				     + "'" + proposicao.getDescricaoCurta() + "', "
 				     + "'" + proposicao.getDataPublicacao() + "', "
 				     + "'" + proposicao.getNumero() + "', "
 				     + idStatus + ","
@@ -92,29 +92,76 @@ private java.sql.Connection conn;
 		System.out.println(sql);
 		int idProposicao = st.executeUpdate(sql,1);
 		proposicao.setIdProposicao(idProposicao);
-		
-		if (proposicao.getTipoProp().equals("Lei Ordinária")){
+		System.out.println(proposicao.getTipoProp());
+		if (proposicao.getTipoProp().contains("Projeto de Lei Ordinária") || proposicao.getTipoProp().contains("Projeto de Lei Complementar")){
 			idProposicao = this.InserirLei(proposicao);
 		}
 		
+		conn.close();
 		return idProposicao;
 	}
 
 	private int InserirLei(Proposicao proposicao) throws SQLException {
 		
-		String sql = "INSERT INTO proposicao (Proposicao_idProposicao, resultadoFinal, ) VALUES ("
+		String sql = "INSERT INTO proposicao (Proposicao_idProposicao, resultadoFinal, resumo) VALUES ("
 			     + "'" + proposicao.getIdProposicao()  + "', "
 			     + "'" + proposicao.getRedacaoFinal() + "', "
-			     + "'" + proposicao.getDescricaoCurta() + "', "
-			     + "'" + proposicao.getDataPublicacao() + "', "
-			     + "'" + proposicao.getNumero() + "', "
-			     + proposicao.getIdAutor() + ")";
+			     + "'" + proposicao.getDescricaoCurta() + "')";
 		Statement st = conn.createStatement();
 		System.out.println(sql);
 		int idProposicao = st.executeUpdate(sql,1);
-		proposicao.setIdProposicao(idProposicao);		
+		proposicao.setIdProposicao(idProposicao);
+		this.inserirDiscussoes(proposicao);
 		
-		return 0;
+		return idProposicao;
+	}
+	
+	private int procurarSessao(String data) throws SQLException {
+		
+		int idSessaoPlenaria = 0;
+		String sql = "SELECT idSessaoPlenaria FROM sessaoplenaria WHERE dataSessao = " + data;
+		Statement st = conn.createStatement();
+		System.out.println(sql);
+		ResultSet rs = st.executeQuery(sql);		
+		while (rs.next()) {
+			idSessaoPlenaria = rs.getInt("idSessaoPlenaria");
+			return idSessaoPlenaria;
+		}	
+		
+		return idSessaoPlenaria;
 	}
 
+	private int InserirSessao(String data) throws SQLException {
+		
+		int idSessao = this.procurarSessao(data);		
+		
+		if (idSessao != 0){
+			return idSessao;
+		}
+		
+		String sql = "INSERT INTO sessaoplenaria (dataSessao) VALUES ("+ data + "')";
+		Statement st = conn.createStatement();
+		System.out.println(sql);
+		idSessao = st.executeUpdate(sql,1);		
+		return idSessao;
+	}
+	
+	private void inserirDiscussoes(Proposicao prop) throws SQLException {
+		
+		for (String data: prop.getResultadoDiscussoes().keySet()) {
+			
+			int idSessao = this.InserirSessao(data);
+			if (idSessao != 0){
+				continue;
+			}
+			else{
+				String sql = "INSERT INTO discussao_lei (idSessaoPlenaria,idProposicao,resultadoSessaoPlenaria) VALUES ("
+						+ idSessao + ", " + prop.getIdProposicao() + ", '" + prop.getResultadoDiscussoes().get(data) +"')";
+				Statement st = conn.createStatement();
+				System.out.println(sql);
+				idSessao = st.executeUpdate(sql,1);		
+			}		
+			
+		}
+	}	
 }

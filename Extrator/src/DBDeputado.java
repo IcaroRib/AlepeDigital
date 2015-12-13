@@ -13,7 +13,7 @@ public class DBDeputado {
 		System.out.println(sql);
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next()) {
-			int idDeputado = rs.getInt("idPartido");
+			int idDeputado = rs.getInt("idDeputado");
 			return idDeputado;
 		}	
 		
