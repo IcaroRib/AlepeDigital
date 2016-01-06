@@ -1,11 +1,35 @@
-hr {
-	margin-top: 10px;
-	margin-bottom: 8px;
+.hr {
+	margin-top: 0px;
+	margin-bottom: 10px;
+	border-bottom: 1px dashed black;
 	
 }
 
+.graph-sim-nao {
+	display: none;
+}
+
+.center-txt {
+	text-align: center;
+}
+
+.align-middle {
+	vertical-align: middle;
+}
+
+.font-alt {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 10px;
+}
+
+.font-alt a:hover {
+	text-decoration: none;
+}
+
 .card-name,
-.card-seg {
+.card-seg,
+.card-lei-status {
 
 	display: inline-block;
 	font-size: 14px;
@@ -20,18 +44,52 @@ hr {
 	vertical-align: middle;
 }
 
-.card-box {
+.card-lei-status,
+#card-lei-status-content {
+	display: block;
+	position: relative;
+	width: 100%;
+	margin: 0px;
+	
+	
+}
+
+.lei-status {
+	margin: 0px;
+	padding: 0px;
+}
+
+.card-box,
+.legenda-box {
 	border: 1px dashed #000;
 	font-size: inherit;
 	background-color: #fff;
-	padding-top: 6px;
-	padding-bottom: 6px;
-	padding-left: 6px;
-	padding-right: 6px;
+	padding: 6px;
+
 
 }
 
-.p-alt-politico {
+.card-box-pol-name {
+	border: 1px dashed #f0f0f0;
+	font-size: inherit;
+	color: #fff;
+	text-align: center;
+	background-color: #333;
+	padding: 6px;
+
+
+}
+
+.ranking-font-lg {
+	font-size: 30px;
+}
+
+.ranking-font-sm {
+	font-size: 15px;
+}
+
+.p-alt-politico,
+.legenda-box {
 	display: inline-block;
 	font-size: 10px;
 	vertical-align: middle;
@@ -58,10 +116,29 @@ hr {
 		
 }
 
+.legenda-box {
+	margin-top: 15px;
+	font-size: 11px;
+	text-align: left;
+}
+
+.bold-on-hover {
+	margin: 3px;
+	display: block;
+}
+
+.bold-on-hover:hover {
+	text-decoration: none;
+	color: #c30000;
+}
+
+#legenda-arquivados {
+	display: none;
+}
+
 .h1-type-1 {
 	display: inline-block;
 	padding-left: 30px;
-	color: white;
 	font-family: 'PT Sans', sans-serif;
 	font-weight: 700;
 	font-size: 70px;
@@ -70,6 +147,7 @@ hr {
 	margin-left: 5px;
 	margin-top: 18px;
 	margin-bottom: 18px;
+	margin-right: 5px;
 	padding-right: 33px;
 	padding-top: 12px;
 	padding-bottom: 12px;
@@ -101,23 +179,54 @@ hr {
 	overflow: hidden;
 }
 
+.bigger {
+	height: 200px;
+}
+
 .card-img {
 	width: 100%;
-	border-radius: 4px;
+	border-radius: 5px;
 
 }
 
-#p-btn-yes-no {
+.interesses-tag {
+	display: inline-block;
+	border:1px dashed #333;
+	padding: 5px;
+	margin-left: 4px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+
+}
+
+.interesses-tag:hover {
+	background-color: #fff;
+	color: #20579F;
+}
+
+.div-logged {
+	
+	display: none;	
+}
+
+.div-not-logged {
+	
+	margin: 10px;
+	
+}
+
+.p-btn-yes-no {
 	text-align: center;
+	margin-top: 20px;
 }
 
-#btn-alt-yes,
-#btn-alt-no {
+.btn-alt-yes,
+.btn-alt-no {
 	width: 40%;
 	margin-right: 5px;
 }
 
-#btn-alt-no {
+.btn-alt-no {
 	margin-left: 5px;
 }
 
@@ -140,7 +249,7 @@ hr {
 }
 
 #alert-not-logged {
-	display: none;
+	
 }
 
 #row-fixer {
@@ -156,15 +265,21 @@ hr {
 
 }
 
-#cards-div {
-	
-
-	
-}
-
-#cadastro-div {
+#cadastro-div,
+#testes-div,
+#ranking-div,
+#arquivadas-div,
+#politicos-div,
+#painel-filtrar-side-politicos,
+#painel-filtrar-top-politicos,
+#painel-filtrar-side-ranking,
+#painel-filtrar-top-ranking {
 	display: none;
 
+}
+
+#loading {
+	text-align: center;
 }
 
 #cadastro-ul {
@@ -189,10 +304,18 @@ hr {
 #bairro,
 #rua,
 #senhaconf,
-#emailconf {
+#emailconf,
+#inputPic {
 	position: absolute;
 	width: 45%;
 	right: 30%;
+}
+
+#inputPic {
+	padding: 0;
+	padding-top: 4px;
+	padding-left: 4px;
+
 }
 
 #p-header {
@@ -219,10 +342,11 @@ hr {
 }
 
 #main-sidebar {
+	position: relative;
 	border: 0px;
 	border-right: 1px;
 	padding-top: 20px;
-	padding-bottom: 40px;
+	padding-bottom: 20px;
 	padding-right: 30px;
 	padding-left: 5px;
 	margin-bottom: 40px;
@@ -236,7 +360,9 @@ hr {
 	
 }
 
-#card-maker {
+#card-maker,
+#card-maker-a,
+#card-maker-r {
 	width: 269px;
 	display: inline-block;
 	margin-right: 10px;
@@ -244,6 +370,14 @@ hr {
 
 }
 
+#card-maker-a {
+
+	background-color: #ebfaeb;
+}
+
+#card-maker-r {
+	background-color: #ffe5e5;
+}
 
 
 #search-box-1 {
@@ -266,31 +400,23 @@ hr {
 	height: 30px;
 }
 
-#interesses-tag {
-	display: inline-block;
-	border:1px dashed #333;
-	padding: 5px;
-	margin-left: 4px;
-	margin-top: 10px;
-	margin-bottom: 5px;
-
-}
-
-#interesses-tag:hover {
-	background-color: #fff;
-	color: #20579F;
-}
-
 #f-1,
 #f-2,
 #f-3,
-#f-4 {
+#f-4,
+#f-5,
+#f-6,
+#f-7 {
 	margin: 0px;
 	padding: 0px;
 
 }
 
-#select-1,#select-2,#select-3,#select-4 {
+#f-7 {
+	display: none;
+}
+
+#select-1,#select-2,#select-3,#select-4,#select-5,#select-6,#select-7 {
 	display: block;
 	width: 100%;
 	height: 100%;
@@ -309,7 +435,7 @@ hr {
 	      box-shadow: inset 0 0px 0px rgba(0, 0, 0, .075);
 }
 
-#select-alt-1,#select-alt-2,#select-alt-3,#select-alt-4 {
+#select-alt-1,#select-alt-2,#select-alt-3,#select-alt-4,#select-alt-5,#select-alt-6 {
 	border: 1px;
 
 }
@@ -340,17 +466,6 @@ hr {
 	width: 100%;
 	text-align: center;
 
-}
-
-#div-logged {
-	
-	display: none;	
-}
-
-#div-not-logged {
-	
-	margin: 10px;
-	
 }
 
 
@@ -391,6 +506,7 @@ hr {
 
  	#inputName,
 	#inputSex,
+	#inputPic,
 	#email,
 	#estado,
 	#cidade,
@@ -445,6 +561,7 @@ hr {
 
 	#content-div {
 		width: 100%;
+		text-align: center;
 	}
 
 }

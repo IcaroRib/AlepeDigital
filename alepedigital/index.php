@@ -35,14 +35,14 @@
 		</div>
 		</center>
 
-		<div class="blog-masthead">
+		<div id="main-menu" class="blog-masthead">
 	      <div class="container">
 
 	        <nav class="blog-nav">
-	          <a id="nav-1-elem" class="blog-nav-item active" href="#" onblur="negritoOff()" onfocus="changeClassNav('nav-1-elem')">Início </a><a class="separator"> /</a>
-	          <a id="nav-2-elem" class="blog-nav-item" href="#" onblur="negritoOff()" onfocus="changeClassNav('nav-2-elem')">Sobre </a><a class="separator"> /</a>
-	          <a id="nav-3-elem" class="blog-nav-item" href="#" onblur="negritoOff()" onfocus="changeClassNav('nav-3-elem')">Contato </a><a class="separator"> /</a>
-	          <a id="nav-4-elem" class="blog-nav-item" href="http://www.alepe.pe.gov.br/" onblur="negritoOff()" onfocus="changeClassNav('nav-4-elem')">Alepe Oficial</a>
+	          <a id="nav-1-elem" class="blog-nav-item active" href="/p/alepedigital/" onfocus="changeClassNav('nav-1-elem')">Início </a><a class="separator"> /</a>
+	          <a id="nav-2-elem" class="blog-nav-item" href="#" onfocus="changeClassNav('nav-2-elem')">Sobre </a><a class="separator"> /</a>
+	          <a id="nav-3-elem" class="blog-nav-item" href="#" onfocus="changeClassNav('nav-3-elem')">Contato </a><a class="separator"> /</a>
+	          <a id="nav-4-elem" class="blog-nav-item" href="http://www.alepe.pe.gov.br/" onfocus="changeClassNav('nav-4-elem')">Alepe Oficial</a>
 	        </nav>
 	      </div>
 	    </div>
@@ -64,15 +64,15 @@
 			    Exibir <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu">
-			    <li><a href="#">Todos os Projetos</a></li>
-			    <li><a href="#">Arquivados</a></li>
-			    <li><a href="#">Políticos</a></li>
-			    <li><a href="#">Ranking</a></li>
+			    <li><a id="a-top-todosProjetos" href="#todosProjetos" onclick="showDiv('cards-div')">Todos os Projetos</a></li>
+			    <li><a id="a-top-arquivados" href="#arquivados" onclick="showDiv('arquivadas-div')">Arquivados</a></li>
+			    <li><a id="a-top-politicos" href="#politicos" onclick="showDiv('politicos-div')">Políticos</a></li>
+			    <li><a id="a-top-ranking" href="#ranking" onclick="showDiv('ranking-div')">Ranking</a></li>
 			    <li hidden><a href="#">Perfil</a></li>
 			  </ul>
 			</div>
 
-			<div class="btn-group">
+			<div id="painel-filtrar-top" class="btn-group">
 			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			    Filtrar <span class="caret"></span>
 			  </button>
@@ -114,27 +114,72 @@
 			  </ul>
 			</div>
 
+			<!-- painel filtrar top politicos -->
+			<div id="painel-filtrar-top-politicos" class="btn-group">
+			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    Filtrar <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu">
+			    <li>
+			    	<select id="select-alt-5" class="form-control">
+	              	  <option disabled selected hidden>Ordenar por</option>
+					  <option>Paulista</option>
+					  <option>Jaboatão dos Guararapes</option>
+					  <option>Pau de Jangada</option>
+					  <option>Casa da Mãe Joana</option>
+					  <option>Porta dos Fundos</option>
+					</select>
+			    </li>
+			    <li>
+			    	<select id="select-alt-6" class="form-control">
+	              	  <option disabled selected hidden>Partido</option>
+					  <option>PT</option>
+					  <option>PSD</option>
+					  <option>PCdoB</option>
+					  <option>Solidariedade</option>
+					  <option>PSOL</option>
+					</select>
+			    </li>
+			  </ul>
+			</div>
+			<!-- fim painel filtrar top politicos -->
+
+			<!-- painel filtrar top ranking -->
+			<div id="painel-filtrar-top-ranking" class="btn-group">
+			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    Filtrar <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu">
+			    <li><a id="a-top-geral" href="#" >Aceitação Geral</a></li>
+			    <li><a id="a-top-votosprojeto" href="#" >Votos por Projeto</a></li>
+			    <li><a id="a-top-totalvotos" href="#" >Total de Votos</a></li>
+			    <li><a id="a-top-votossim" href="#" >Votos Sim</a></li>
+			    <li><a id="a-top-votosnao" href="#" >Votos Não</a></li>
+			  </ul>
+			</div>
+			<!-- fim painel filtrar top ranking -->
+
 			<div class="btn-group">
 			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			    Interesses <span class="caret"></span>
 			  </button>
 			  <ul id="ul-tags" class="dropdown-menu">
-			  	<div id="div-logged" class="list-group">
+			  	<div id="" class="list-group div-logged">
 
-				  <a id="interesses-tag" href="#" class="list-group-item"> #tag1</a>
-				  <a id="interesses-tag" href="#" class="list-group-item"> #tag2</a>
- 				  <a id="interesses-tag" href="#" class="list-group-item"> #tag3</a>
- 				  <a id="interesses-tag" href="#" class="list-group-item"> #tag4</a>
- 				  <a id="interesses-tag" href="#" class="list-group-item"> #tag5</a>
- 				  <a id="interesses-tag" href="#" class="list-group-item"> #tag6</a>
- 				  <a id="interesses-tag" href="#" class="list-group-item"> #tag7</a>
- 				  <a id="interesses-tag" href="#" class="list-group-item"> #tag8</a>
- 				  <a id="interesses-tag" href="#" class="list-group-item"> #tag9</a>
+				  <a id="" href="#" class="list-group-item interesses-tag"> #tag1</a>
+				  <a id="" href="#" class="list-group-item interesses-tag"> #tag2</a>
+ 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag3</a>
+ 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag4</a>
+ 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag5</a>
+ 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag6</a>
+ 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag7</a>
+ 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag8</a>
+ 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag9</a>
 
 
 				</div>
 
-				<div id="div-not-logged" class="list-group">
+				<div id="" class="list-group div-not-logged">
 				  <p id="p-side-top" class="p-type-2">
 					Faça Login ou Cadastre-se para poder usufruir dos recursos do site!<br/><br/>
 					<!-- Trigger the modal with a button -->
@@ -187,18 +232,18 @@
           		<div class="panel-body">
             	  <div class="list-group">
 
-				    <a id="a-todosProjetos" href="#" class="list-group-item" onblur="negritoOff()" onfocus="negrito('a-todosProjetos','a-arquivados','a-politicos','a-ranking','a-perfil')" onclick="showCadastro(false)">Todos os Projetos</a>
-				    <a id="a-arquivados" href="#" class="list-group-item" onblur="negritoOff()" onfocus="negrito('a-arquivados','a-todosProjetos','a-politicos','a-ranking','a-perfil')">Arquivados</a>
-				    <a id="a-politicos" href="#" class="list-group-item" onblur="negritoOff()" onfocus="negrito('a-politicos','a-arquivados','a-todosProjetos','a-ranking','a-perfil')">Políticos</a>
-				    <a id="a-ranking" href="#" class="list-group-item" onblur="negritoOff()" onfocus="negrito('a-ranking','a-politicos','a-arquivados','a-todosProjetos','a-perfil')">Ranking</a>
-				    <!-- <a id="a-perfil" href="#" class="list-group-item" onblur="negritoOff()" onfocus="negrito('a-perfil','a-politicos','a-arquivados','a-todosProjetos','a-ranking')">Perfil</a> -->
+				    <a id="a-todosProjetos" href="#todosProjetos" class="list-group-item" onclick="showDiv('cards-div')">Todos os Projetos</a>
+				    <a id="a-arquivados" href="#arquivados" class="list-group-item" onclick="showDiv('arquivadas-div')">Arquivados</a>
+				    <a id="a-politicos" href="#politicos" class="list-group-item" onclick="showDiv('politicos-div')">Políticos</a>
+				    <a id="a-ranking" href="#ranking" class="list-group-item" onclick="showDiv('ranking-div')">Ranking</a>
+				    <!-- <a id="a-perfil" href="#" class="list-group-item" onclick="showDiv('perfil-div')">Perfil</a> -->
 
 
 				  </div>
           		</div>
         	  </div>
       		</div>
-      		<div id="painel-filtrar" class="panel panel-primary">
+      		<div id="painel-filtrar-side" class="panel panel-primary">
         	  <div class="panel-heading" role="tab" id="headingTwo">
           		<h4 class="panel-title">
             	  <a id="menu-filtrar" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -243,6 +288,13 @@
 						</select>
      				</div>
 
+     				<div class="list-group-item" id="f-7">  
+		              	<select id="select-7" class="form-control">
+		              	  <option disabled selected hidden>Status</option>
+						  <option>Aprovados</option>
+						  <option>Reprovados</option>
+						</select>
+     				</div>
 
      				<div class="list-group-item" id="f-4">  
 		              	<select id="select-4" class="form-control" title="Em breve!" disabled>
@@ -255,6 +307,75 @@
           		</div>
         	  </div>
       		</div>
+      		<!-- PAINEL FILTRAR SIDE POLÍTICOS -->
+      		<div id="painel-filtrar-side-politicos" class="panel panel-primary">
+        	  <div class="panel-heading" role="tab" id="headingFour">
+          		<h4 class="panel-title">
+            	  <a id="menu-filtrar-alt" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              	    Filtrar <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
+            	  </a>
+          		</h4>
+        	  </div>
+        	  <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour" aria-expanded="false" style="height: 0px;">
+          		<div class="panel-body">
+            	  <div class="list-group">
+
+            	  	<div class="list-group-item" id="f-5">
+     					<select id="select-5" class="form-control">
+		              	  <option disabled selected hidden>Ordenar por</option>
+						  <option>Paulista</option>
+						  <option>Jaboatão dos Guararapes</option>
+						  <option>Pau de Jangada</option>
+						  <option>Casa da Mãe Joana</option>
+						  <option>Porta dos Fundos</option>
+						</select>
+					</div>
+
+
+  					<div class="list-group-item" id="f-6">  
+		              	<select id="select-6" class="form-control">
+		              	  <option disabled selected hidden>Partido</option>
+						  <option>PT</option>
+						  <option>PSD</option>
+						  <option>PCdoB</option>
+						  <option>Solidariedade</option>
+						  <option>PSOL</option>
+						</select>
+     				</div>
+
+
+				  </div>
+          		</div>
+        	  </div>
+      		</div>
+      		<!-- FIM PAINEL FILTRAR SIDE POLÍTICOS -->
+
+      		<!-- PAINEL FILTRAR SIDE RANKING -->
+      		<div id="painel-filtrar-side-ranking" class="panel panel-primary">
+        	  <div class="panel-heading" role="tab" id="headingFive">
+          		<h4 class="panel-title">
+            	  <a id="menu-filtrar-rank" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive" class="collapsed">
+              	    Filtrar <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
+            	  </a>
+          		</h4>
+        	  </div>
+        	  <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive" aria-expanded="false" style="height: 0px;">
+          		<div class="panel-body">
+            	  <div class="list-group">
+
+            	  	<a id="a-side-geral" href="#" class="list-group-item">Aceitação Geral</a>
+				    <a id="a-side-votosprojeto" href="#" class="list-group-item">Votos por Projeto</a>
+				    <a id="a-side-totalvotos" href="#" class="list-group-item">Total de Votos</a>
+				    <a id="a-side-votossim" href="#" class="list-group-item">Votos Sim</a>
+				    <a id="a-side-votosnao" href="#" class="list-group-item">Votos Não</a>
+
+				  </div>
+          		</div>
+        	  </div>
+      		</div>
+      		<!-- FIM PAINEL FILTRAR SIDE RANKING -->
+
+      		<!-- PAINEL SIDE INTERESSES -->
       		<div id="painel-interesses" class="panel panel-primary">
         	  <div class="panel-heading" role="tab" id="headingThree">
           		<h4 class="panel-title">
@@ -265,22 +386,22 @@
         	  </div>
         		<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false" style="height: 0px;">
           		  <div class="panel-body">
-            		<div id="div-logged" class="list-group">
+            		<div id="" class="list-group div-logged">
 
-  					  <a id="interesses-tag" href="#" class="list-group-item"> #tag1</a>
-  					  <a id="interesses-tag" href="#" class="list-group-item"> #tag2</a>
-     				  <a id="interesses-tag" href="#" class="list-group-item"> #tag3</a>
-     				  <a id="interesses-tag" href="#" class="list-group-item"> #tag4</a>
-     				  <a id="interesses-tag" href="#" class="list-group-item"> #tag5</a>
-     				  <a id="interesses-tag" href="#" class="list-group-item"> #tag6</a>
-     				  <a id="interesses-tag" href="#" class="list-group-item"> #tag7</a>
-     				  <a id="interesses-tag" href="#" class="list-group-item"> #tag8</a>
-     				  <a id="interesses-tag" href="#" class="list-group-item"> #tag9</a>
+  					  <a id="" href="#" class="list-group-item interesses-tag"> #tag1</a>
+  					  <a id="" href="#" class="list-group-item interesses-tag"> #tag2</a>
+     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag3</a>
+     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag4</a>
+     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag5</a>
+     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag6</a>
+     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag7</a>
+     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag8</a>
+     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag9</a>
 
 
 					</div>
 
-					<div id="div-not-logged" class="list-group">
+					<div id="" class="list-group div-not-logged">
 					  <p id="p-side-left" class="p-type-2">
 						Faça Login ou Cadastre-se para poder usufruir dos recursos do site!<br/><br/>
 						<!-- Trigger the modal with a button -->
@@ -291,6 +412,16 @@
           		  </div>
         		</div>
       		  </div>
+      		  <!-- FIM PAINEL SIDE INTERESSES -->
+
+      		  <center id="legenda-arquivados">
+      			<p class="legenda-box">
+      		  	  <a id="filtrar-arquivados-a" class="bold-on-hover"><img src="img/card-maker-a.png" width="16" height="16"/> - Aprovados</a>
+      		  	  <a id="filtrar-arquivados-r" class="bold-on-hover"><img src="img/card-maker-r.png" width="16" height="16"/> - Reprovados</a>
+      			</p>
+      		  </center>  		  
+
+
     	  </div>
     	</div>
     	<!-- FIM DA SIDEBAR -->
@@ -301,147 +432,41 @@
     	<!-- MAIN CONTENT -->
         <div id="content-div" class="col-sm-8 col-sm-offset-0 blog-main">
           <!-- DIV POSTAGENS: Cards -->
-          <div id="cards-div" class="blog-post">
-            <div id="card-maker" class="sidebar-module-inset">
-            	<div class="card-img-spot">
-            		<img class="card-img" src="http://www.culturamix.com/wp-content/gallery/homer-1/homer-simpson.jpg">	
-            	</div>            	
-            	<h4 class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
-            	<h4 class="card-seg"><span class="label label-warning">Saúde</span></h4>
-            		            
-	            <p class="card-box">Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-				
-	            <p><div class="card-box">
-	            	<img class="img-politico-small" height="32" width="32" src="https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg">
-	            	<p class="p-alt-politico">Proposto pelo deputado<br/><strong>Dilma Rouseff</strong> do <strong>PT</strong></p>
-	            </div></p>
+          <div id="cards-div" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: Cards -->
 
-	            <p id="p-btn-yes-no" class="card-box">
-	            	<button id="btn-alt-yes" type="button" class="btn btn-sm btn-danger">NÃO</button>
-	            	<button id="btn-alt-no" type="button" class="btn btn-sm btn-success">SIM</button>
-	            </p>
+          <!-- DIV POSTAGENS: Cards -->
+          <div id="arquivadas-div" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: Cards -->
 
-	            <center><p id="card-footer" class="p-alt-politico">Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font></p></center>
-          	</div>
+          <!-- DIV POSTAGENS: Cards -->
+          <div id="politicos-div" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: Políticos -->
 
-          	<div id="card-maker" class="sidebar-module-inset">
-          		<div class="card-img-spot">
-            		<img class="card-img" src="http://www.fatosdesconhecidos.com.br/wp-content/uploads/2015/10/south_park.png">
-            	</div>
-            	<h4 class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
-            	<h4 class="card-seg"><span class="label label-warning">Saúde</span></h4>
-            		            
-	            <p class="card-box">Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-				
-	            <p><div class="card-box">
-	            	<img class="img-politico-small" height="32" width="32" src="https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg">
-	            	<p class="p-alt-politico">Proposto pelo deputado<br/><strong>Dilma Rouseff</strong> do <strong>PT</strong></p>
-	            </div></p>
+          <!-- DIV POSTAGENS: Cards -->
+          <div id="ranking-div" class="blog-post">
+          	<table class="table">
+          	  <thead>
+				<tr>
+				  <th class="center-txt"><abbr title="Classificação no ranking.">#posição</abbr></th>
+				  <th class="center-txt"><abbr title="Informações resumidas da figura política.">#deputado</abbr></th>
+				  <th class="center-txt"><abbr title="Índice de aprovação média dos projetos registrados no site. É necessário que haja um somatório mínimo de 5000 votos para entrar no ranking.">#aceitaçãoGeral (%)</abbr></th>
+				  <th class="center-txt"><abbr title="Quantidade média de votos por projeto">#médiaDeVotos</abbr></th>
+				  <th class="center-txt"><abbr title="Quantidades totais de votos positivos, negativos e geral">#quantidadeDeVotos</abbr></th>
+				</tr>
+			  </thead>
+			  <tbody id="ranking-div-table" class="center-txt"></tbody>
+			</table>
+          </div>
+          <!-- END OF DIV POSTAGENS: Cards -->
 
-	            <p id="p-btn-yes-no" class="card-box">
-	            	<button id="btn-alt-yes" type="button" class="btn btn-sm btn-danger">NÃO</button>
-	            	<button id="btn-alt-no" type="button" class="btn btn-sm btn-success">SIM</button>
-	            </p>
+          <!-- DIV POSTAGENS: testes -->
+          <div id="testes-div" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: testes -->
 
-	            <center><p id="card-footer" class="p-alt-politico">Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font></p></center>
-          	</div>
-
-          	<div id="card-maker" class="sidebar-module-inset">
-            	<div class="card-img-spot">
-            		<img class="card-img" src="http://www.saojoaodomanhuacu.mg.gov.br/images/stories/img/saude2.jpg">
-            	</div>
-            	<h4 class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
-            	<h4 class="card-seg"><span class="label label-warning">Saúde</span></h4>
-            		            
-	            <p class="card-box">Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-				
-	            <p><div class="card-box">
-	            	<img class="img-politico-small" height="32" width="32" src="https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg">
-	            	<p class="p-alt-politico">Proposto pelo deputado<br/><strong>Dilma Rouseff</strong> do <strong>PT</strong></p>
-	            </div></p>
-
-	            <p id="p-btn-yes-no" class="card-box">
-	            	<button id="btn-alt-yes" type="button" class="btn btn-sm btn-danger">NÃO</button>
-	            	<button id="btn-alt-no" type="button" class="btn btn-sm btn-success">SIM</button>
-	            </p>
-
-	            <center><p id="card-footer" class="p-alt-politico">Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font></p></center>
-          	</div>
-
-          	<div id="card-maker" class="sidebar-module-inset">
-            	<div class="card-img-spot">
-            		<img class="card-img" src="http://www.culturamix.com/wp-content/gallery/homer-1/homer-simpson.jpg">	
-            	</div>            	
-            	<h4 class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
-            	<h4 class="card-seg"><span class="label label-warning">Saúde</span></h4>
-            		            
-	            <p class="card-box">Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-				
-	            <p><div class="card-box">
-	            	<img class="img-politico-small" height="32" width="32" src="https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg">
-	            	<p class="p-alt-politico">Proposto pelo deputado<br/><strong>Dilma Rouseff</strong> do <strong>PT</strong></p>
-	            </div></p>
-
-	            <p id="p-btn-yes-no" class="card-box">
-	            	<button id="btn-alt-yes" type="button" class="btn btn-sm btn-danger">NÃO</button>
-	            	<button id="btn-alt-no" type="button" class="btn btn-sm btn-success">SIM</button>
-	            </p>
-
-	            <center><p id="card-footer" class="p-alt-politico">Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font></p></center>
-          	</div>
-
-          	<div id="card-maker" class="sidebar-module-inset">
-          		<div class="card-img-spot">
-            		<img class="card-img" src="http://www.fatosdesconhecidos.com.br/wp-content/uploads/2015/10/south_park.png">
-            	</div>
-            	<h4 class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
-            	<h4 class="card-seg"><span class="label label-warning">Saúde</span></h4>
-            		            
-	            <p class="card-box">Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-				
-	            <p><div class="card-box">
-	            	<img class="img-politico-small" height="32" width="32" src="https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg">
-	            	<p class="p-alt-politico">Proposto pelo deputado<br/><strong>Dilma Rouseff</strong> do <strong>PT</strong></p>
-	            </div></p>
-
-	            <p id="p-btn-yes-no" class="card-box">
-	            	<button id="btn-alt-yes" type="button" class="btn btn-sm btn-danger">NÃO</button>
-	            	<button id="btn-alt-no" type="button" class="btn btn-sm btn-success">SIM</button>
-	            </p>
-
-	            <center><p id="card-footer" class="p-alt-politico">Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font></p></center>
-          	</div>
-
-          	<div id="card-maker" class="sidebar-module-inset">
-            	<div class="card-img-spot">
-            		<img class="card-img" src="http://www.saojoaodomanhuacu.mg.gov.br/images/stories/img/saude2.jpg">
-            	</div>
-            	<h4 class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
-            	<h4 class="card-seg"><span class="label label-warning">Saúde</span></h4>
-            		            
-	            <p class="card-box">Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-				
-	            <p><div class="card-box">
-	            	<img class="img-politico-small" height="32" width="32" src="https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg">
-	            	<p class="p-alt-politico">Proposto pelo deputado<br/><strong>Dilma Rouseff</strong> do <strong>PT</strong></p>
-	            </div></p>
-
-	            <p id="p-btn-yes-no" class="card-box">
-	            	<button id="btn-alt-yes" type="button" class="btn btn-sm btn-danger">NÃO</button>
-	            	<button id="btn-alt-no" type="button" class="btn btn-sm btn-success">SIM</button>
-	            </p>
-
-	            <center><p id="card-footer" class="p-alt-politico">Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font></p></center>
-          	</div>
-          </div><!-- /.blog-post -->
-
-
-
-
-
-
-
-
+          <!-- DIV POSTAGENS: Cards -->
+          <div id="loading" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: Cards -->
 
 
 
@@ -453,8 +478,8 @@
             <form id="cadastro-form" class="navbar-form">
             	<ul id="cadastro-ul" type="none">
             		<li class="li-fixer">
-            			<label class="control-label" for="input-4">Foto de Perfil</label>
-						<input id="inputPic" type="file">
+            			<label class="control-label" for="inputPic">Foto de Perfil</label>
+						<input id="inputPic" type="file" accept="image/*" class="form-control">
             		</li>
             		<li class="li-fixer">
             			<label class="control-label" for="inputName">Nome Completo <abbr title="obrigatório">*</abbr></label>
@@ -517,7 +542,7 @@
             	</ul>
             	<br/>
             	<center>
-            	  <button id="btn-cad-voltar" class="btn btn-default" onclick="showCadastro(false)">Voltar</button>
+            	  <button id="btn-cad-voltar" class="btn btn-default" onclick="showDiv('cards-div')">Voltar</button>
             	  <button id="btn-cad-enviar" type="submit" class="btn btn-success">Enviar</button>
             	</center>
             	
@@ -563,12 +588,12 @@
 	          	<a href="#" class="stylized-link-anchor">Esqueci minha senha.</a>
 	          	<br/><br/>
 	          	<div id="alert-not-logged" class="alert alert-danger" role="alert">
-			        <strong>Oh snap!</strong> Change a few things up and try submitting again.
+			        <strong>Falha!</strong> Informações de login inválidas.
 			    </div>
 	          	<hr>
 	          	Não possue registro e/ou não quer logar com Facebook ou G+?
 	          	<br/><br/>
-	          	<button class="btn btn-sm btn-default" type="button" data-dismiss="modal" onclick="showCadastro(true)">Registre-se com um e-mail</button>
+	          	<button class="btn btn-sm btn-default" type="button" data-dismiss="modal" onclick="showDiv('cadastro-div')">Registre-se com um e-mail</button>
 	        </center>
 	      </div>
 	    </div>
@@ -583,9 +608,10 @@
       <p>Alepe Digital. <i>Designed by <a href="#">@gmathx</a> / <a href="#">@icaro-ribeiro</a>.</i></p>
     </footer>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<script src="js/personal.js"></script>
-	<script src='http://files.rafaelwendel.com/jquery.js'></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<script type="text/javascript" src="js/Charts.js"></script>
+	<script type="text/javascript" src="js/personal.js"></script>	
+	<script type="text/javascript" src='http://files.rafaelwendel.com/jquery.js'></script>
 </body>
 </html>
