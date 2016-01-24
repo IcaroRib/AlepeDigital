@@ -20,18 +20,46 @@
 	<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 
 </head>
-<body onresize="ptype2alt()">
+<body onresize="ptype2alt();" onload="loadContent(); cepRequest(); ptype2alt();">
 	<div id="main-header" >
 		<center>
 		<div class="container" id="inline-block-header">
 			<img id="logo" src="img/alepe-logo.png">
 			<h1 class="h1-type-1"><font color="#20579F">@</font>ALEPEDIGITAL</h1>
-			<p class="p-type-1">
+			<div id="ptype1-not-logged" class="p-type-1">
 				<br/>Faça Login ou Cadastre-se para<br/> poder usufruir dos recursos do site!<br/><br/>
 				<!-- Trigger the modal with a button -->
 				<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#login-modal">Faça o Login ou Cadastre-se</button>
-			</p>
-			<button id="button-header" type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#login-modal">Login / Cadastro</button>
+			</div>
+			<div id="ptype1-logged" class="p-type-1 not-logged">
+				<img id="user-pic" class="user-pic" src="http://www.depressedfan.com/mt-static/images/default-userpic-90.jpg">
+				<!-- Trigger the modal with a button -->
+				<br/>
+				<div class="btn-group">
+				  <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    Bem-vindo, Guilherme! <span class="caret"></span>
+				  </button>
+				  <ul id="" class="dropdown-menu lower-font">
+				    <li><a id="" href="#">Seu perfil</a></li>
+				    <li><a id="" href="#">Configurações de conta</a></li>
+				    <li><a id="" href="#">Alterar senha</a></li>
+				    <li><a id="" href="#">Sair</a></li>
+				  </ul>
+				</div>
+			</div>
+			<button id="" type="button" class="btn btn-xs btn-primary button-header" data-toggle="modal" data-target="#login-modal" style="display:none;">Login / Cadastro</button>
+			
+			<div class="btn-group button-header">
+				  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    Bem-vindo, Guilherme! <span class="caret"></span>
+				  </button>
+				  <ul id="" class="dropdown-menu lower-font">
+				    <li><a id="" href="#">Seu perfil</a></li>
+				    <li><a id="" href="#">Configurações de conta</a></li>
+				    <li><a id="" href="#">Alterar senha</a></li>
+				    <li><a id="" href="#">Sair</a></li>
+				  </ul>
+				</div>
 		</div>
 		</center>
 
@@ -64,10 +92,10 @@
 			    Exibir <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu">
-			    <li><a id="a-top-todosProjetos" href="#todosProjetos" onclick="showDiv('cards-div')">Todos os Projetos</a></li>
-			    <li><a id="a-top-arquivados" href="#arquivados" onclick="showDiv('arquivadas-div')">Arquivados</a></li>
-			    <li><a id="a-top-politicos" href="#politicos" onclick="showDiv('politicos-div')">Políticos</a></li>
-			    <li><a id="a-top-ranking" href="#ranking" onclick="showDiv('ranking-div')">Ranking</a></li>
+			    <li><a id="a-top-todosProjetos" href="#todosProjetos" data-div="cards-div" onclick="showDiv(this)">Todos os Projetos</a></li>
+			    <li><a id="a-top-arquivados" href="#arquivados" data-div="arquivadas-div" onclick="showDiv(this)">Arquivados</a></li>
+			    <li><a id="a-top-politicos" href="#politicos" data-div="politicos-div" onclick="showDiv(this)">Políticos</a></li>
+			    <li><a id="a-top-ranking" href="#ranking" data-div="ranking-div" onclick="showDiv(this)">Ranking</a></li>
 			    <li hidden><a href="#">Perfil</a></li>
 			  </ul>
 			</div>
@@ -164,7 +192,7 @@
 			    Interesses <span class="caret"></span>
 			  </button>
 			  <ul id="ul-tags" class="dropdown-menu">
-			  	<div id="" class="list-group div-logged">
+			  	<div id="" class="list-group logged">
 
 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag1</a>
 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag2</a>
@@ -232,10 +260,10 @@
           		<div class="panel-body">
             	  <div class="list-group">
 
-				    <a id="a-todosProjetos" href="#todosProjetos" class="list-group-item" onclick="showDiv('cards-div')">Todos os Projetos</a>
-				    <a id="a-arquivados" href="#arquivados" class="list-group-item" onclick="showDiv('arquivadas-div')">Arquivados</a>
-				    <a id="a-politicos" href="#politicos" class="list-group-item" onclick="showDiv('politicos-div')">Políticos</a>
-				    <a id="a-ranking" href="#ranking" class="list-group-item" onclick="showDiv('ranking-div')">Ranking</a>
+				    <button id="a-todosProjetos" href="#todosProjetos" class="list-group-item" data-div="cards-div" onclick="showDiv(this)">Todos os Projetos</button>
+				    <button id="a-arquivados" href="#arquivados" class="list-group-item" data-div="arquivadas-div" onclick="showDiv(this)">Arquivados</button>
+				    <button id="a-politicos" href="#politicos" class="list-group-item" data-div="politicos-div" onclick="showDiv(this)">Políticos</button>
+				    <button id="a-ranking" href="#ranking" class="list-group-item" data-div="ranking-div" onclick="showDiv(this)">Ranking</button>
 				    <!-- <a id="a-perfil" href="#" class="list-group-item" onclick="showDiv('perfil-div')">Perfil</a> -->
 
 
@@ -386,7 +414,7 @@
         	  </div>
         		<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false" style="height: 0px;">
           		  <div class="panel-body">
-            		<div id="" class="list-group div-logged">
+            		<div id="" class="list-group logged">
 
   					  <a id="" href="#" class="list-group-item interesses-tag"> #tag1</a>
   					  <a id="" href="#" class="list-group-item interesses-tag"> #tag2</a>
@@ -460,16 +488,13 @@
           </div>
           <!-- END OF DIV POSTAGENS: Cards -->
 
-          <!-- DIV POSTAGENS: testes -->
-          <div id="testes-div" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: testes -->
+          <!-- DIV POSTAGENS: politico -->
+          <div id="politico-div" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: politico -->
 
-          <!-- DIV POSTAGENS: Cards -->
-          <div id="loading" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: Cards -->
-
-
-
+          <!-- DIV POSTAGENS: projeto -->
+          <div id="projeto-div" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: projeto -->
 
           <!-- DIV CADASTRO -->
           <div id="cadastro-div" class="blog-post">
@@ -539,15 +564,23 @@
             			<label class="control-label" for="senhaconf">Confirmar Senha <abbr title="obrigatório">*</abbr></label>
 						<input id="senhaconf" type="password" class="form-control" required>
             		</li>
+            		<li class="li-fixer">
+            			<input id="receber-news" type="checkbox">
+            			<label class="control-label" for="receber-news">Desejo receber notificações por e-mail.</label>
+            		</li>
             	</ul>
             	<br/>
             	<center>
-            	  <button id="btn-cad-voltar" class="btn btn-default" onclick="showDiv('cards-div')">Voltar</button>
+            	  <button id="btn-cad-voltar" class="btn btn-default" data-div="cards-div" onclick="showDiv(this)">Voltar</button>
             	  <button id="btn-cad-enviar" type="submit" class="btn btn-success">Enviar</button>
             	</center>
             	
           	</form>
           </div>
+
+          <!-- DIV POSTAGENS: loading -->
+          <div id="loading" class="blog-post"></div>
+          <!-- END OF DIV POSTAGENS: Cards -->
 
 
 
@@ -593,7 +626,7 @@
 	          	<hr>
 	          	Não possue registro e/ou não quer logar com Facebook ou G+?
 	          	<br/><br/>
-	          	<button class="btn btn-sm btn-default" type="button" data-dismiss="modal" onclick="showDiv('cadastro-div')">Registre-se com um e-mail</button>
+	          	<button id="btn-cad-mod" class="btn btn-sm btn-default" type="button" data-dismiss="modal" data-div='cadastro-div' onclick="showDiv(this)">Registre-se com um e-mail</button>
 	        </center>
 	      </div>
 	    </div>
@@ -611,7 +644,8 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/Charts.js"></script>
-	<script type="text/javascript" src="js/personal.js"></script>	
-	<script type="text/javascript" src='http://files.rafaelwendel.com/jquery.js'></script>
+	<!-- <script type="text/javascript" src="js/bootstrap-slider.js"></script> -->
+	<script type="text/javascript" src="js/personal.js"></script>
+	
 </body>
 </html>

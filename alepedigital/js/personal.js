@@ -3,7 +3,7 @@
  */
 
  var CURRENT_PAGE = 0;
- window.location.hash = "todosProjetos"
+ window.location.hash = "todosProjetos";
 
  /*
   *
@@ -17,8 +17,6 @@ function changeClassNav(elem){
 	document.getElementById("nav-4-elem").className = 'blog-nav-item';
   document.getElementById(elem).className = 'blog-nav-item active';
 };
-
-
 
 function ptype2alt(){
   var windowWidth = window.innerWidth;
@@ -39,33 +37,68 @@ function ptype2alt(){
 
 };
 
+function yesNoEvent(arg1) {
 
-function chartConfig (id,arg1,arg2) {'+data[i]["card-img"]+'
+    var parent = document.getElementById(arg1.getAttribute("data-parent-id"));
+    arg1.style.opacity = 1;
+    arg1.style.cursor = "pointer";
+    var arg2;
+
+    if (arg1.getAttribute("data-val") == "yes") {  //if arg is the "sim" button
+        
+        
+
+        arg2 = parent.getElementsByClassName("btn-alt-no")[0];
+
+        
+        
+    }
+
+
+
+
+    else {
+        
+
+        arg2 = parent.getElementsByClassName("btn-alt-yes")[0];
+
+
+    }
+    arg1.disabled = false;
+    arg2.disabled = false;
+    arg1.disabled = true;
+    arg2.style.opacity = .25;
+}
+
+
+function chartConfig (id,arg1,arg2) {
       // Get context with jQuery - using jQuery's .get() method.
       var ctx = $("#"+id).get(0).getContext("2d");
       // This will get the first returned node in the jQuery collection.
       var myPieChart = new Chart(ctx).Pie([
           {
               value: arg2,
-              color:"#FF0000",
-              highlight: "#FF3838",
+              color:"#D9534F",
+              highlight: "#BE4845",
+              label: "Não"
 
               
           },
           {
               value: arg1,
-              color: "#00AE00",
-              highlight: "#00CD00",
+              color: "#5CB85C",
+              highlight: "#4B964B",
+              label: "Sim"
               
               
           }
       ],
       {
           //Boolean - Whether we should show a stroke on each segment
-          segmentShowStroke : false,
+          segmentShowStroke : true,
 
           //Number - The percentage of the chart that we cut out of the middle
-          percentageInnerCutout : 70, // This is 0 for Pie charts
+          percentageInnerCutout : 0, // This is 0 for Pie charts
 
           //Number - Amount of animation steps
           animationSteps : 100,
@@ -86,6 +119,10 @@ function chartConfig (id,arg1,arg2) {'+data[i]["card-img"]+'
       
 
 };
+
+
+//chartConfig('leiChart',53,47); 
+
 
 
 
@@ -112,22 +149,39 @@ function loadContent(){
                     $("#arquivadas-div").append(data);
                 }
 
+                else if (window.location.hash.indexOf("projeto:") != -1) {
+                    $("#projeto-div").html(data);
+                    var x = document.getElementById("leiChart");
+                    var yesPercent = parseFloat(x.getAttribute('data-yes-percent'));
+                    var noPercent = parseFloat(x.getAttribute('data-no-percent'));
+                    chartConfig("leiChart",yesPercent,noPercent);
+                }
+
+                else if (window.location.hash.indexOf("politico:") != -1) {
+                    $("#politico-div").html(data);
+                    var x = document.getElementById("polAceitacaoChart");
+                    var yesPercent = parseFloat(x.getAttribute('data-yes-percent'));
+                    var noPercent = parseFloat(x.getAttribute('data-no-percent'));
+                    chartConfig("polAceitacaoChart",yesPercent,noPercent);
+                }
+
                 else if (window.location.hash == "#ranking") {
                     
                     $("#ranking-div-table").append(data);
                     var x = document.getElementsByClassName("myChart");
-                    var y = document.getElementsByClassName("graph-sim");
-                    var z = document.getElementsByClassName("graph-nao");
                     for (var i = 0; i < x.length; i++) {
                           var novoId = x.length + i + 1;
                           x[i].id = novoId.toString();
-                          chartConfig(x[i].id,parseFloat(y[i].innerHTML),parseFloat(z[i].innerHTML));
+                          var yesPercent = parseFloat(x[i].getAttribute('data-yes-percent'));
+                          var noPercent = parseFloat(x[i].getAttribute('data-no-percent'));
+                          chartConfig(x[i].id,yesPercent,noPercent);
                     };
                     
                 }
 
                 else {
                     $("#cards-div").append(data);
+                  
                 }
 
                            
@@ -138,11 +192,20 @@ function loadContent(){
        });
 };
 
+function clearDiv() {
+    CURRENT_PAGE = 0;
+    var elems = document.getElementsByClassName("blog-post");
+    for (var i = 0; i < elems.length; i++) {
+        if ((elems[i].id != "cadastro-div") && (elems[i].id != "ranking-div")) {
+            elems[i].innerHTML = "";
+        };
+        
+    };
+}
+
 
 
 function showDiv(resp) {
-
-    var nofilter = ['cadastro-div'];
 
     document.getElementById("cards-div").style.display = 'none';
     document.getElementById("cadastro-div").style.display = 'none';
@@ -150,82 +213,76 @@ function showDiv(resp) {
     document.getElementById("politicos-div").style.display = 'none';
     document.getElementById("ranking-div").style.display = 'none';
     document.getElementById("legenda-arquivados").style.display = "none";
+    document.getElementById("politico-div").style.display = "none";
+    document.getElementById("projeto-div").style.display = "none";
     document.getElementById("f-7").style.display = "none";
-    document.getElementById(resp).style.display = 'block';
+    document.getElementById(resp.getAttribute('data-div')).style.display = 'block';
 
     //--------------------------------------------------------------------
+    
+    document.getElementById("painel-filtrar-side").style.display = "none";
+    document.getElementById("painel-filtrar-side-politicos").style.display = "none";
+    document.getElementById("painel-filtrar-side-ranking").style.display = "none";
+    document.getElementById("painel-filtrar-top").style.display = "none";
+    document.getElementById("painel-filtrar-top-politicos").style.display = "none";
+    document.getElementById("painel-filtrar-top-ranking").style.display = "none";
 
-    document.getElementById("a-todosProjetos").disabled = true;
-    document.getElementById("a-top-todosProjetos").disabled = true;
-    document.getElementById("a-arquivados").disabled = true;
-    document.getElementById("a-top-arquivados").disabled = true;
-    document.getElementById("a-politicos").disabled = true;
-    document.getElementById("a-top-politicos").disabled = true;
-    document.getElementById("a-ranking").disabled = true;
-    document.getElementById("a-top-ranking").disabled = true;
+    //-------------------------------------------------------------------------
 
-    if (resp == "cadastro-div") {window.location.hash = "cadastro";}
+    if (resp.getAttribute('data-div') == "cadastro-div") {
+      window.location.hash = "cadastro";
+    }
+  
+    else if (resp.getAttribute('data-div') == 'politicos-div') {
+      
+      document.getElementById("painel-filtrar-side-politicos").style.display = "block";
+      document.getElementById("painel-filtrar-top-politicos").style.display = "inline-block";
+      window.location.hash = "politicos";
+      
+    }
 
-    if (nofilter.indexOf(resp) !== -1) { // if resp is not found in nofilter
-      document.getElementById("painel-filtrar-side").style.display = "none";
-      document.getElementById("painel-filtrar-side-politicos").style.display = "none";
-      document.getElementById("painel-filtrar-side-ranking").style.display = "none";
-      document.getElementById("painel-filtrar-top").style.display = "none";
-      document.getElementById("painel-filtrar-top-politicos").style.display = "none";
-      document.getElementById("painel-filtrar-top-ranking").style.display = "none";
+    else if (resp.getAttribute('data-div') == "ranking-div") {
+      document.getElementById("painel-filtrar-side-ranking").style.display = "block";
+      document.getElementById("painel-filtrar-top-ranking").style.display = "inline-block";
+      window.location.hash = "ranking";
+      
+    }
+
+    else if (resp.getAttribute('data-div') == "projeto-div") {
+
+      window.location.hash = "projeto:" + resp.getAttribute('data-card-id');
+
+    }
+
+    else if (resp.getAttribute('data-div') == "politico-div") {
+
+      window.location.hash = "politico:" + resp.getAttribute('data-card-id');
+
     }
 
     else {
-      if (resp == 'politicos-div') {
-        document.getElementById("painel-filtrar-side").style.display = "none";
-        document.getElementById("painel-filtrar-side-politicos").style.display = "block";
-        document.getElementById("painel-filtrar-side-ranking").style.display = "none";
-        document.getElementById("painel-filtrar-top").style.display = "none";
-        document.getElementById("painel-filtrar-top-politicos").style.display = "inline-block";
-        document.getElementById("painel-filtrar-top-ranking").style.display = "none";
+      document.getElementById("painel-filtrar-side").style.display = "block";
+      document.getElementById("painel-filtrar-top").style.display = "inline-block";
 
-        window.location.hash = "politicos";
+      if (resp.getAttribute('data-div') == "arquivadas-div") {
+
+        window.location.hash = "arquivados";
+        document.getElementById("legenda-arquivados").style.display = "block";
+        document.getElementById("f-7").style.display = "block";
         
-      }
 
-      else if (resp == "ranking-div") {
-        document.getElementById("painel-filtrar-side").style.display = "none";
-        document.getElementById("painel-filtrar-side-politicos").style.display = "none";
-        document.getElementById("painel-filtrar-side-ranking").style.display = "block";
-        document.getElementById("painel-filtrar-top").style.display = "none";
-        document.getElementById("painel-filtrar-top-politicos").style.display = "none";
-        document.getElementById("painel-filtrar-top-ranking").style.display = "inline-block";
-
-        window.location.hash = "ranking";
-        
       }
 
       else {
-        document.getElementById("painel-filtrar-side").style.display = "block";
-        document.getElementById("painel-filtrar-side-politicos").style.display = "none";
-        document.getElementById("painel-filtrar-side-ranking").style.display = "none";
-        document.getElementById("painel-filtrar-top").style.display = "inline-block";
-        document.getElementById("painel-filtrar-top-politicos").style.display = "none";
-        document.getElementById("painel-filtrar-top-ranking").style.display = "none";
-
-        if (resp == "arquivadas-div") {
-
-          window.location.hash = "arquivados";
-          document.getElementById("legenda-arquivados").style.display = "block";
-          document.getElementById("f-7").style.display = "block";
-          
-
-        }
-
-        else {
-          window.location.hash = "todosProjetos";
-          
-        }
+        window.location.hash = "todosProjetos";
+        
       }
+    }
 
-      loadContent();
+
+    clearDiv();
+    loadContent();
       
-    }  
 
 };
 
@@ -250,24 +307,29 @@ function cepRequest() {
            });   
    return false;    
    })
-}
+};
 
 
-
-
-$(document).ready( function() {   
+$(document).ready(function() {
+   loadContent();
    cepRequest();
    ptype2alt();
-   loadContent();
+   $('[data-toggle="tooltip"]').tooltip(); 
 });
 
 
+
 $(window).scroll(function(){
+
+
     if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300){
-      CURRENT_PAGE += 1;
-      if (window.location.hash != "#cadastro") {
-        loadContent();
-      }
+
+      if ((window.location.hash.indexOf("cadastro") == -1) && (window.location.hash.indexOf("projeto:") == -1) && (window.location.hash.indexOf("politico:") == -1)) {
+
+          CURRENT_PAGE += 1;
+          loadContent();
+
+      }    
       
     }
 });
