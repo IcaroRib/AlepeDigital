@@ -1,24 +1,27 @@
-<div id="card-maker" class="sidebar-module-inset">
+<div id="card-maker" class="sidebar-module-inset" style="vertical-align: middle; -webkit-transition: background-color 0.9s; -moz-transition: background-color 0.9s; -o-transition: background-color 0.9s; transition: background-color 0.9s;">
   <div class="card-img-spot">
-      <img id="card-img" class="card-img altCursor" data-div="projeto-div" data-card-id="" src="https://git.reviewboard.kde.org/media/uploaded/files/2015/07/18/a70d8ab6-1bbf-4dcc-b11f-524c2f56b14a__picture_default_cover.jpg" onclick="showDiv(this)" />
+      <img id="card-img" class="card-img altCursor formRef" data-name="div" data-val="projeto:" data-card-id="" src="https://git.reviewboard.kde.org/media/uploaded/files/2015/07/18/a70d8ab6-1bbf-4dcc-b11f-524c2f56b14a__picture_default_cover.jpg"/>
   </div>
-  <h4 id="card-name" class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
-  <h4 id="card-seg" class="card-seg"><span class="label label-warning">Saúde</span></h4>
+  <center>
+    <h4 id="card-name" class="card-name"><span class="label label-default">PLS 452-2015</span></h4>
+    <h4 id="card-status" class="card-status"><span class="label label-danger"></span></h4>
+    <!-- <h4 id="card-seg" class="card-seg"><span class="label label-info">Saúde</span></h4> -->
+  </center>
     
-  <p id="card-desc" class="card-box altCursor" data-div="projeto-div" data-card-id="" onclick="showDiv(this)">
+  <p id="card-desc" class="card-box altCursor formRef" data-name="div" data-val="projeto:" data-card-id="">
     Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.
   </p>
   
   <p><div class="card-box" style="font-size: 10px;">
     <img id="card-politico-img" class="img-politico-small" height="32" width="32" src="https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg">
     <p id="card-politico-info" class="p-alt-politico">
-      Proposto pelo deputado<br/><a id="a-nomePol" class="altCursor" data-div="politico-div" data-card-id="dilma-roulseff" onclick="showDiv(this)">Dilma Rouseff</a> do <strong>PT</strong>
+      Proposto pelo deputado<br/><a id="a-nomePol" class="altCursor formRef" data-name="div" data-val="politico:" data-card-id="dilma-roulseff">Dilma Rouseff</a> do <strong>PT</strong>
     </p>
   </div></p>
 
   <p id="" class="p-btn-yes-no">
-    <button id="btn-lei-no" type="button" class="btn btn-sm btn-danger btn-alt-no" data-val="no" data-parent-id="" onclick="yesNoEvent(this)">NÃO</button>
-    <button id="btn-lei-yes" type="button" class="btn btn-sm btn-success btn-alt-yes" data-val="yes" data-parent-id="" onclick="yesNoEvent(this)">SIM</button>
+    <button id="btn-lei-no" type="button" class="btn btn-sm btn-danger btn-alt-no" data-val="no" data-status="0" data-parent-id="" onclick="yesNoEvent(this,1)">NÃO</button>
+    <button id="btn-lei-yes" type="button" class="btn btn-sm btn-success btn-alt-yes" data-val="yes" data-status="0" data-parent-id="" onclick="yesNoEvent(this,1)">SIM</button>
   </p>
 
   <center><p id="card-footer" class="p-alt-politico">Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font></p></center>

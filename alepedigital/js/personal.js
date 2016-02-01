@@ -3,20 +3,25 @@
  */
 
  var CURRENT_PAGE = 0;
- window.location.hash = "todosProjetos";
+ var CURRENT_DIV = document.getElementById("body").getAttribute("data-div");
 
  /*
   *
   */
 
 
-function changeClassNav(elem){
-	document.getElementById("nav-1-elem").className = 'blog-nav-item';
-	document.getElementById("nav-2-elem").className = 'blog-nav-item';
-	document.getElementById("nav-3-elem").className = 'blog-nav-item';
-	document.getElementById("nav-4-elem").className = 'blog-nav-item';
-  document.getElementById(elem).className = 'blog-nav-item active';
-};
+function ageLimitCheck() {
+    var min = document.getElementById("min-age-filter").value;
+    var max = document.getElementById("max-age-filter").value;
+
+    if ((min != 0) && (max != 0) && (min > max)) {
+        
+           alert("Escala etária invalida");
+           document.getElementById("age-filter-min-zero").selected = true;
+           document.getElementById("age-filter-max-zero").selected = true;
+        
+    }
+}
 
 function ptype2alt(){
   var windowWidth = window.innerWidth;
@@ -37,37 +42,68 @@ function ptype2alt(){
 
 };
 
-function yesNoEvent(arg1) {
+function genderFilter(arg) {
+
+    if (arg.getAttribute("data-val") == "boy") {
+        var arg2 = document.getElementById("gender-filter-girl");  
+    }
+
+    else {
+        var arg2 = document.getElementById("gender-filter-boy");
+    }
+
+    if (arg.getAttribute("data-status") != 1) {      
+
+        arg.style.opacity = 1;
+        arg2.style.opacity = .25;
+        arg.setAttribute("data-status", "1");
+        arg2.setAttribute("data-status", "0");
+    }
+
+    else {
+        arg.setAttribute("data-status", "0");
+        arg2.setAttribute("data-status", "0");
+        arg.style.opacity = 1;
+        arg2.style.opacity = 1;
+    }
+    
+}
+
+function yesNoEvent(arg1,arg3) {
 
     var parent = document.getElementById(arg1.getAttribute("data-parent-id"));
-    arg1.style.opacity = 1;
-    arg1.style.cursor = "pointer";
     var arg2;
 
     if (arg1.getAttribute("data-val") == "yes") {  //if arg is the "sim" button
-        
-        
-
         arg2 = parent.getElementsByClassName("btn-alt-no")[0];
-
-        
-        
     }
-
-
-
 
     else {
-        
-
         arg2 = parent.getElementsByClassName("btn-alt-yes")[0];
-
-
     }
-    arg1.disabled = false;
-    arg2.disabled = false;
-    arg1.disabled = true;
-    arg2.style.opacity = .25;
+
+    if (arg1.getAttribute("data-status") != 1) {      
+
+        arg1.style.opacity = 1;
+        arg2.style.opacity = .25;
+        arg1.setAttribute("data-status", "1");
+        arg2.setAttribute("data-status", "0");
+
+        if (arg3==1) {
+            arg1.parentElement.parentElement.style.backgroundColor = "#FFFFC9";
+        }
+    }
+
+    else {
+        arg1.setAttribute("data-status", "0");
+        arg2.setAttribute("data-status", "0");
+        arg1.style.opacity = 1;
+        arg2.style.opacity = 1;
+        
+        if (arg3==1) {
+          arg1.parentElement.parentElement.style.backgroundColor = "#f0f0f0";
+        }
+    }
 }
 
 
@@ -121,68 +157,32 @@ function chartConfig (id,arg1,arg2) {
 };
 
 
-//chartConfig('leiChart',53,47); 
+
+//chartConfig("leiChart",70,30);
 
 
-
-
-function loadContent(){
+function loadPage(){
 
     $('#loading').html("<img src='img/loading.gif' height='32' width='32'/>").fadeIn('fast');
-
     
     $.ajax({
 
-            url : 'tools/fetch_cards.php', /* URL que será chamada */ 
+            url : 'index.php', /* URL que será chamada */ 
             type: 'POST',
-            data: 'href=' + window.location.hash + '&page=' + CURRENT_PAGE,
+            data: 'div=' + CURRENT_DIV + '&page=' + CURRENT_PAGE,
             cache: false,
             success: function(data){
 
                 $('#loading').fadeOut('fast');
 
-                if (window.location.hash == "#politicos") {
-                    $("#politicos-div").append(data);
-                }
-
-                else if (window.location.hash == "#arquivados") {
-                    $("#arquivadas-div").append(data);
-                }
-
-                else if (window.location.hash.indexOf("projeto:") != -1) {
-                    $("#projeto-div").html(data);
-                    var x = document.getElementById("leiChart");
-                    var yesPercent = parseFloat(x.getAttribute('data-yes-percent'));
-                    var noPercent = parseFloat(x.getAttribute('data-no-percent'));
-                    chartConfig("leiChart",yesPercent,noPercent);
-                }
-
-                else if (window.location.hash.indexOf("politico:") != -1) {
-                    $("#politico-div").html(data);
-                    var x = document.getElementById("polAceitacaoChart");
-                    var yesPercent = parseFloat(x.getAttribute('data-yes-percent'));
-                    var noPercent = parseFloat(x.getAttribute('data-no-percent'));
-                    chartConfig("polAceitacaoChart",yesPercent,noPercent);
-                }
-
-                else if (window.location.hash == "#ranking") {
-                    
-                    $("#ranking-div-table").append(data);
-                    var x = document.getElementsByClassName("myChart");
-                    for (var i = 0; i < x.length; i++) {
-                          var novoId = x.length + i + 1;
-                          x[i].id = novoId.toString();
-                          var yesPercent = parseFloat(x[i].getAttribute('data-yes-percent'));
-                          var noPercent = parseFloat(x[i].getAttribute('data-no-percent'));
-                          chartConfig(x[i].id,yesPercent,noPercent);
-                    };
-                    
+                if (CURRENT_DIV != "ranking") {
+                    $("#main-content-spot").append(data);
                 }
 
                 else {
-                    $("#cards-div").append(data);
-                  
+                    $("#ranking-div-table").append(data);
                 }
+                
 
                            
             },
@@ -190,102 +190,10 @@ function loadContent(){
                 $('#loading').html("<img src='img/error-loading.gif' height='32' width='32'/>").fadeIn('fast');
             }
        });
+
+
+    chartSet();
 };
-
-function clearDiv() {
-    CURRENT_PAGE = 0;
-    var elems = document.getElementsByClassName("blog-post");
-    for (var i = 0; i < elems.length; i++) {
-        if ((elems[i].id != "cadastro-div") && (elems[i].id != "ranking-div")) {
-            elems[i].innerHTML = "";
-        };
-        
-    };
-}
-
-
-
-function showDiv(resp) {
-
-    document.getElementById("cards-div").style.display = 'none';
-    document.getElementById("cadastro-div").style.display = 'none';
-    document.getElementById("arquivadas-div").style.display = 'none';
-    document.getElementById("politicos-div").style.display = 'none';
-    document.getElementById("ranking-div").style.display = 'none';
-    document.getElementById("legenda-arquivados").style.display = "none";
-    document.getElementById("politico-div").style.display = "none";
-    document.getElementById("projeto-div").style.display = "none";
-    document.getElementById("f-7").style.display = "none";
-    document.getElementById(resp.getAttribute('data-div')).style.display = 'block';
-
-    //--------------------------------------------------------------------
-    
-    document.getElementById("painel-filtrar-side").style.display = "none";
-    document.getElementById("painel-filtrar-side-politicos").style.display = "none";
-    document.getElementById("painel-filtrar-side-ranking").style.display = "none";
-    document.getElementById("painel-filtrar-top").style.display = "none";
-    document.getElementById("painel-filtrar-top-politicos").style.display = "none";
-    document.getElementById("painel-filtrar-top-ranking").style.display = "none";
-
-    //-------------------------------------------------------------------------
-
-    if (resp.getAttribute('data-div') == "cadastro-div") {
-      window.location.hash = "cadastro";
-    }
-  
-    else if (resp.getAttribute('data-div') == 'politicos-div') {
-      
-      document.getElementById("painel-filtrar-side-politicos").style.display = "block";
-      document.getElementById("painel-filtrar-top-politicos").style.display = "inline-block";
-      window.location.hash = "politicos";
-      
-    }
-
-    else if (resp.getAttribute('data-div') == "ranking-div") {
-      document.getElementById("painel-filtrar-side-ranking").style.display = "block";
-      document.getElementById("painel-filtrar-top-ranking").style.display = "inline-block";
-      window.location.hash = "ranking";
-      
-    }
-
-    else if (resp.getAttribute('data-div') == "projeto-div") {
-
-      window.location.hash = "projeto:" + resp.getAttribute('data-card-id');
-
-    }
-
-    else if (resp.getAttribute('data-div') == "politico-div") {
-
-      window.location.hash = "politico:" + resp.getAttribute('data-card-id');
-
-    }
-
-    else {
-      document.getElementById("painel-filtrar-side").style.display = "block";
-      document.getElementById("painel-filtrar-top").style.display = "inline-block";
-
-      if (resp.getAttribute('data-div') == "arquivadas-div") {
-
-        window.location.hash = "arquivados";
-        document.getElementById("legenda-arquivados").style.display = "block";
-        document.getElementById("f-7").style.display = "block";
-        
-
-      }
-
-      else {
-        window.location.hash = "todosProjetos";
-        
-      }
-    }
-
-
-    clearDiv();
-    loadContent();
-      
-
-};
-
 
 
 function cepRequest() {
@@ -310,13 +218,37 @@ function cepRequest() {
 };
 
 
-$(document).ready(function() {
-   loadContent();
-   cepRequest();
-   ptype2alt();
-   $('[data-toggle="tooltip"]').tooltip(); 
+function filterSubmit(elem) {
+    elem.parentElement.parentElement.submit();
+}
+
+
+$(".formRef").click(function() {
+    var name = $(this).attr('data-name');
+    var link = $(this).attr('data-val');
+    $('.post1').attr("name",name);
+    $('.post1').attr("value",link);
+    $('.form1').submit();
 });
 
+function chartSet () {
+    var chartTag = document.getElementById("body").getAttribute("data-chart");
+
+    if (chartTag !== "0") {
+
+        var graphs = document.getElementsByTagName("canvas");
+
+        for (var i = 0; i < graphs.length; i++) {
+
+          graphs[i].id = graphs.length + i;
+          graphId = graphs[i].id;
+          graphYesPercent = graphs[i].getAttribute("data-yes-percent");
+          graphNoPercent = graphs[i].getAttribute("data-no-percent");
+
+          chartConfig(graphId,graphYesPercent,graphNoPercent);
+        }
+    }
+}
 
 
 $(window).scroll(function(){
@@ -324,12 +256,19 @@ $(window).scroll(function(){
 
     if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300){
 
-      if ((window.location.hash.indexOf("cadastro") == -1) && (window.location.hash.indexOf("projeto:") == -1) && (window.location.hash.indexOf("politico:") == -1)) {
-
           CURRENT_PAGE += 1;
-          loadContent();
-
-      }    
-      
+          var loadingState = $('body').attr('data-loading');
+          if (loadingState == "1") {
+              loadPage();
+          };
+          
     }
+});
+
+$(document).ready(function() {
+   cepRequest();
+   ptype2alt();
+   chartSet();
+   $('[data-toggle="tooltip"]').tooltip();
+
 });

@@ -1,651 +1,322 @@
-<!DOCTYPE html>
-<html>
-<head>
-
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/fav.png">
-    <!--
-	<meta name="description" content="Teste do bootstrap!"/>
-	<meta name="author" content="gmathx"/>
-	<meta name="keywords" content="conhecimento, cambio, troca"/>
-	-->
+<?php
 	
-	<title>Alepe Digital</title>
-	
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="stylesheet" type="text/css" href="css/style2.css">
-	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-	<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+	include_once("tools/simple_html_dom.php");
+	include_once("tools/functions.php");
 
-</head>
-<body onresize="ptype2alt();" onload="loadContent(); cepRequest(); ptype2alt();">
-	<div id="main-header" >
-		<center>
-		<div class="container" id="inline-block-header">
-			<img id="logo" src="img/alepe-logo.png">
-			<h1 class="h1-type-1"><font color="#20579F">@</font>ALEPEDIGITAL</h1>
-			<div id="ptype1-not-logged" class="p-type-1">
-				<br/>Faça Login ou Cadastre-se para<br/> poder usufruir dos recursos do site!<br/><br/>
-				<!-- Trigger the modal with a button -->
-				<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#login-modal">Faça o Login ou Cadastre-se</button>
-			</div>
-			<div id="ptype1-logged" class="p-type-1 not-logged">
-				<img id="user-pic" class="user-pic" src="http://www.depressedfan.com/mt-static/images/default-userpic-90.jpg">
-				<!-- Trigger the modal with a button -->
-				<br/>
-				<div class="btn-group">
-				  <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Bem-vindo, Guilherme! <span class="caret"></span>
-				  </button>
-				  <ul id="" class="dropdown-menu lower-font">
-				    <li><a id="" href="#">Seu perfil</a></li>
-				    <li><a id="" href="#">Configurações de conta</a></li>
-				    <li><a id="" href="#">Alterar senha</a></li>
-				    <li><a id="" href="#">Sair</a></li>
-				  </ul>
-				</div>
-			</div>
-			<button id="" type="button" class="btn btn-xs btn-primary button-header" data-toggle="modal" data-target="#login-modal" style="display:none;">Login / Cadastro</button>
+	/*
+	 * Variáveis de suporte
+	 */
+	$DIV = (!empty($_POST["div"])) ? $_POST["div"] : "todosProjetos";	
+
+	/*
+	 * Carga e manipulação de conteúdo
+	 */
+	$FILTER_ODENAR_POR = (!empty($_POST["f-ordenarPor"])) ? $_POST["f-ordenarPor"] : "recentes";
+	$FILTER_MINICIPIO = (!empty($_POST["f-municipio"])) ? $_POST["f-municipio"] : "";
+	$FILTER_PARTIDO = (!empty($_POST["f-partido"])) ? $_POST["f-partido"] : "";
+	$FILTER_STATUS_LEI = (!empty($_POST["f-status-lei"])) ? $_POST["f-status-lei"] : "";
+	$FILTER_RANKING_ORDER = (!empty($_POST["f-ranking-order"])) ? $_POST["f-ranking-order"] : "aceitacaoGeral";
+	$BUSCA = (!empty($_POST["busca"])) ? $_POST["busca"] : "";
+	$DESTINATION = "#main-content-spot";
+	$PAGE = (!empty($_POST["page"])) ? $_POST['page'] : 0;
+ 	$QT_CARDS = 9;
+ 	$INICIO = $QT_CARDS * $PAGE;
+ 	$CARDS = [];
+
+
+ 	if ($PAGE == 0) {
+ 			$MAIN_HTML = file_get_html("tools/models/main.html");
+
+			// Imagem de usuário no topo (se logado)	
+			$MAIN_HTML->find("img[id=user-pic]", 0)->src = "https://scontent-gru2-1.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/12119160_981882851873822_1042885828410420420_n.jpg?oh=d2e636f4e0402671f469d4b18c64bb9c&oe=5744D8D1";
+
+			// Altera nome de usuário em botões
+			$BTN_USER_OPT = $MAIN_HTML->find("button[class=btn-user-opt]");
+			foreach ($BTN_USER_OPT as $button) {
+				$button->innertext .= "Guilherme <span class='caret'></span>";
+			}
+
+			// Evento para personalizar menu no topo de acordo com a atual página (DIV)
+			$BLOG_NAV_ITEM = $MAIN_HTML->find("a[class=blog-nav-item]");
+			foreach ($BLOG_NAV_ITEM as $a) {
+				if ($DIV == $a->{"data-val"}) {
+					$a->class .= " active";
+					break;	
+				}
+				
+			}
+
+			/*
+			 * Adiciona os interesses (tags) do usuário à página (se logado)
+			 */
+			$DIV_TAGS = $MAIN_HTML->find(".list-interesses");
+			$aux_array = array(array('saúde',1),array('política',2),array('infraestrutura',5),array('social',3));
+			foreach ($DIV_TAGS as $aTag) {
+				$aTag->innertext = addTags($aux_array);	
+			}
 			
-			<div class="btn-group button-header">
-				  <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Bem-vindo, Guilherme! <span class="caret"></span>
-				  </button>
-				  <ul id="" class="dropdown-menu lower-font">
-				    <li><a id="" href="#">Seu perfil</a></li>
-				    <li><a id="" href="#">Configurações de conta</a></li>
-				    <li><a id="" href="#">Alterar senha</a></li>
-				    <li><a id="" href="#">Sair</a></li>
-				  </ul>
-				</div>
-		</div>
-		</center>
-
-		<div id="main-menu" class="blog-masthead">
-	      <div class="container">
-
-	        <nav class="blog-nav">
-	          <a id="nav-1-elem" class="blog-nav-item active" href="/p/alepedigital/" onfocus="changeClassNav('nav-1-elem')">Início </a><a class="separator"> /</a>
-	          <a id="nav-2-elem" class="blog-nav-item" href="#" onfocus="changeClassNav('nav-2-elem')">Sobre </a><a class="separator"> /</a>
-	          <a id="nav-3-elem" class="blog-nav-item" href="#" onfocus="changeClassNav('nav-3-elem')">Contato </a><a class="separator"> /</a>
-	          <a id="nav-4-elem" class="blog-nav-item" href="http://www.alepe.pe.gov.br/" onfocus="changeClassNav('nav-4-elem')">Alepe Oficial</a>
-	        </nav>
-	      </div>
-	    </div>
-    </div>
-
-
-
-
-    <!-- CONTENT -->
-    <br/><br/>
-
-    <div class="container">
-	  <div id="row-fixer" class="row">
-
-	  <!-- NAVBAR ON TOP -->
-	  	<div id="second-navbar">
-			<div class="btn-group">
-			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Exibir <span class="caret"></span>
-			  </button>
-			  <ul class="dropdown-menu">
-			    <li><a id="a-top-todosProjetos" href="#todosProjetos" data-div="cards-div" onclick="showDiv(this)">Todos os Projetos</a></li>
-			    <li><a id="a-top-arquivados" href="#arquivados" data-div="arquivadas-div" onclick="showDiv(this)">Arquivados</a></li>
-			    <li><a id="a-top-politicos" href="#politicos" data-div="politicos-div" onclick="showDiv(this)">Políticos</a></li>
-			    <li><a id="a-top-ranking" href="#ranking" data-div="ranking-div" onclick="showDiv(this)">Ranking</a></li>
-			    <li hidden><a href="#">Perfil</a></li>
-			  </ul>
-			</div>
-
-			<div id="painel-filtrar-top" class="btn-group">
-			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Filtrar <span class="caret"></span>
-			  </button>
-			  <ul class="dropdown-menu">
-			    <li>
-			    	<select id="select-alt-1" class="form-control">
-	              	  <option id="opt-recentes" value="1" selected>Mais Recentes</option>
-					  <option id="opt-comentados" value="2">Mais Comentados</option>
-					  <option id="opt-discutidos" value="3">Mais Discutidos</option>
-					  <option id="opt-votados" value="4">Mais Votados</option>
-					  <option id="opt-amigos" value="5">Amigos Votaram</option>
-					</select>
-			    </li>
-			    <li>
-			    	<select id="select-alt-2" class="form-control">
-	              	  <option disabled selected hidden>Município</option>
-					  <option>Paulista</option>
-					  <option>Jaboatão dos Guararapes</option>
-					  <option>Pau de Jangada</option>
-					  <option>Casa da Mãe Joana</option>
-					  <option>Porta dos Fundos</option>
-					</select>
-			    </li>
-			    <li>
-			    	<select id="select-alt-3" class="form-control">
-	              	  <option disabled selected hidden>Partido</option>
-					  <option>PT</option>
-					  <option>PSD</option>
-					  <option>PCdoB</option>
-					  <option>Solidariedade</option>
-					  <option>PSOL</option>
-					</select>
-			    </li>
-			    <li>
-			    	<select id="select-alt-4" class="form-control" title="Em breve!" disabled>
-	              	  <option disabled selected hidden>Categoria</option>
-					</select>
-			    </li>
-			  </ul>
-			</div>
-
-			<!-- painel filtrar top politicos -->
-			<div id="painel-filtrar-top-politicos" class="btn-group">
-			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Filtrar <span class="caret"></span>
-			  </button>
-			  <ul class="dropdown-menu">
-			    <li>
-			    	<select id="select-alt-5" class="form-control">
-	              	  <option disabled selected hidden>Ordenar por</option>
-					  <option>Paulista</option>
-					  <option>Jaboatão dos Guararapes</option>
-					  <option>Pau de Jangada</option>
-					  <option>Casa da Mãe Joana</option>
-					  <option>Porta dos Fundos</option>
-					</select>
-			    </li>
-			    <li>
-			    	<select id="select-alt-6" class="form-control">
-	              	  <option disabled selected hidden>Partido</option>
-					  <option>PT</option>
-					  <option>PSD</option>
-					  <option>PCdoB</option>
-					  <option>Solidariedade</option>
-					  <option>PSOL</option>
-					</select>
-			    </li>
-			  </ul>
-			</div>
-			<!-- fim painel filtrar top politicos -->
-
-			<!-- painel filtrar top ranking -->
-			<div id="painel-filtrar-top-ranking" class="btn-group">
-			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Filtrar <span class="caret"></span>
-			  </button>
-			  <ul class="dropdown-menu">
-			    <li><a id="a-top-geral" href="#" >Aceitação Geral</a></li>
-			    <li><a id="a-top-votosprojeto" href="#" >Votos por Projeto</a></li>
-			    <li><a id="a-top-totalvotos" href="#" >Total de Votos</a></li>
-			    <li><a id="a-top-votossim" href="#" >Votos Sim</a></li>
-			    <li><a id="a-top-votosnao" href="#" >Votos Não</a></li>
-			  </ul>
-			</div>
-			<!-- fim painel filtrar top ranking -->
-
-			<div class="btn-group">
-			  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Interesses <span class="caret"></span>
-			  </button>
-			  <ul id="ul-tags" class="dropdown-menu">
-			  	<div id="" class="list-group logged">
-
-				  <a id="" href="#" class="list-group-item interesses-tag"> #tag1</a>
-				  <a id="" href="#" class="list-group-item interesses-tag"> #tag2</a>
- 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag3</a>
- 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag4</a>
- 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag5</a>
- 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag6</a>
- 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag7</a>
- 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag8</a>
- 				  <a id="" href="#" class="list-group-item interesses-tag"> #tag9</a>
-
-
-				</div>
-
-				<div id="" class="list-group div-not-logged">
-				  <p id="p-side-top" class="p-type-2">
-					Faça Login ou Cadastre-se para poder usufruir dos recursos do site!<br/><br/>
-					<!-- Trigger the modal with a button -->
-					<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#login-modal">Login / Cadastro</button>
-				  </p>
-				</div>			    
-
-			  </ul>
-			</div>
-
-			<div id="div-search-box-2" class="btn-group">
-			  <div id="search-box-2" class="input-group">
-			    <input id="search-sp" type="text" class="form-control" placeholder="Buscar">
-				  <span class="input-group-btn">
-				    <button id="search-sp-btn" class="btn btn-default" type="button">
-				  	  <span class="glyphicon glyphicon-search"></span>
-				    </button>
-				  </span>
-			  </div><!-- /input-group -->
-			</div>
-		</div>
-		<!-- END OF NAVBAR ON TOP -->
-
-
-		<!-- NAVBAR ON LEFT SIDE -->
-	    <div id="main-sidebar" class="col-xs-3 col-xs-push-0">
-
-	      <div id="search-box-1" class="input-group">
-			<input id="search-sp" type="text" class="form-control" placeholder="Buscar">
-			  <span class="input-group-btn">
-				<button id="search-sp-btn" class="btn btn-default" type="button">
-					<span class="glyphicon glyphicon-search"></span>
-				</button>
-			  </span>
-		  </div><!-- /input-group -->
-
-		  <br/>
-
-
-		  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-      		<div id="painel-exibir" class="panel panel-primary">
-        	  <div class="panel-heading" role="tab" id="headingOne">
-          		<h4 class="panel-title">
-            	  <a id="menu-exibir" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="">
-              	    Exibir <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-            	  </a>
-          		</h4>
-        	  </div>
-        	  <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne" aria-expanded="true">
-          		<div class="panel-body">
-            	  <div class="list-group">
-
-				    <button id="a-todosProjetos" href="#todosProjetos" class="list-group-item" data-div="cards-div" onclick="showDiv(this)">Todos os Projetos</button>
-				    <button id="a-arquivados" href="#arquivados" class="list-group-item" data-div="arquivadas-div" onclick="showDiv(this)">Arquivados</button>
-				    <button id="a-politicos" href="#politicos" class="list-group-item" data-div="politicos-div" onclick="showDiv(this)">Políticos</button>
-				    <button id="a-ranking" href="#ranking" class="list-group-item" data-div="ranking-div" onclick="showDiv(this)">Ranking</button>
-				    <!-- <a id="a-perfil" href="#" class="list-group-item" onclick="showDiv('perfil-div')">Perfil</a> -->
-
-
-				  </div>
-          		</div>
-        	  </div>
-      		</div>
-      		<div id="painel-filtrar-side" class="panel panel-primary">
-        	  <div class="panel-heading" role="tab" id="headingTwo">
-          		<h4 class="panel-title">
-            	  <a id="menu-filtrar" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              	    Filtrar <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-            	  </a>
-          		</h4>
-        	  </div>
-        	  <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false" style="height: 0px;">
-          		<div class="panel-body">
-            	  <div class="list-group">
-
-            	  	<div class="list-group-item" id="f-1">  
-		              	<select id="select-1" class="form-control">
-		              	  <option id="opt-recentes" value="1" selected>Mais Recentes</option>
-						  <option id="opt-comentados" value="2">Mais Comentados</option>
-						  <option id="opt-discutidos" value="3">Mais Discutidos</option>
-						  <option id="opt-votados" value="4">Mais Votados</option>
-						  <option id="opt-amigos" value="5">Amigos Votaram</option>
-						</select>
-     				</div>
-
-     				<div class="list-group-item" id="f-2">
-     					<select id="select-2" class="form-control">
-		              	  <option disabled selected hidden>Município</option>
-						  <option>Paulista</option>
-						  <option>Jaboatão dos Guararapes</option>
-						  <option>Pau de Jangada</option>
-						  <option>Casa da Mãe Joana</option>
-						  <option>Porta dos Fundos</option>
-						</select>
-					</div>
-
-
-  					<div class="list-group-item" id="f-3">  
-		              	<select id="select-3" class="form-control">
-		              	  <option disabled selected hidden>Partido</option>
-						  <option>PT</option>
-						  <option>PSD</option>
-						  <option>PCdoB</option>
-						  <option>Solidariedade</option>
-						  <option>PSOL</option>
-						</select>
-     				</div>
-
-     				<div class="list-group-item" id="f-7">  
-		              	<select id="select-7" class="form-control">
-		              	  <option disabled selected hidden>Status</option>
-						  <option>Aprovados</option>
-						  <option>Reprovados</option>
-						</select>
-     				</div>
-
-     				<div class="list-group-item" id="f-4">  
-		              	<select id="select-4" class="form-control" title="Em breve!" disabled>
-		              	  <option disabled selected hidden>Categoria</option>
-						</select>
-     				</div>
-
-
-				  </div>
-          		</div>
-        	  </div>
-      		</div>
-      		<!-- PAINEL FILTRAR SIDE POLÍTICOS -->
-      		<div id="painel-filtrar-side-politicos" class="panel panel-primary">
-        	  <div class="panel-heading" role="tab" id="headingFour">
-          		<h4 class="panel-title">
-            	  <a id="menu-filtrar-alt" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-              	    Filtrar <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-            	  </a>
-          		</h4>
-        	  </div>
-        	  <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour" aria-expanded="false" style="height: 0px;">
-          		<div class="panel-body">
-            	  <div class="list-group">
-
-            	  	<div class="list-group-item" id="f-5">
-     					<select id="select-5" class="form-control">
-		              	  <option disabled selected hidden>Ordenar por</option>
-						  <option>Paulista</option>
-						  <option>Jaboatão dos Guararapes</option>
-						  <option>Pau de Jangada</option>
-						  <option>Casa da Mãe Joana</option>
-						  <option>Porta dos Fundos</option>
-						</select>
-					</div>
-
-
-  					<div class="list-group-item" id="f-6">  
-		              	<select id="select-6" class="form-control">
-		              	  <option disabled selected hidden>Partido</option>
-						  <option>PT</option>
-						  <option>PSD</option>
-						  <option>PCdoB</option>
-						  <option>Solidariedade</option>
-						  <option>PSOL</option>
-						</select>
-     				</div>
-
-
-				  </div>
-          		</div>
-        	  </div>
-      		</div>
-      		<!-- FIM PAINEL FILTRAR SIDE POLÍTICOS -->
-
-      		<!-- PAINEL FILTRAR SIDE RANKING -->
-      		<div id="painel-filtrar-side-ranking" class="panel panel-primary">
-        	  <div class="panel-heading" role="tab" id="headingFive">
-          		<h4 class="panel-title">
-            	  <a id="menu-filtrar-rank" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive" class="collapsed">
-              	    Filtrar <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-            	  </a>
-          		</h4>
-        	  </div>
-        	  <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive" aria-expanded="false" style="height: 0px;">
-          		<div class="panel-body">
-            	  <div class="list-group">
-
-            	  	<a id="a-side-geral" href="#" class="list-group-item">Aceitação Geral</a>
-				    <a id="a-side-votosprojeto" href="#" class="list-group-item">Votos por Projeto</a>
-				    <a id="a-side-totalvotos" href="#" class="list-group-item">Total de Votos</a>
-				    <a id="a-side-votossim" href="#" class="list-group-item">Votos Sim</a>
-				    <a id="a-side-votosnao" href="#" class="list-group-item">Votos Não</a>
-
-				  </div>
-          		</div>
-        	  </div>
-      		</div>
-      		<!-- FIM PAINEL FILTRAR SIDE RANKING -->
-
-      		<!-- PAINEL SIDE INTERESSES -->
-      		<div id="painel-interesses" class="panel panel-primary">
-        	  <div class="panel-heading" role="tab" id="headingThree">
-          		<h4 class="panel-title">
-            	  <a id="menu-favs" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              		Interesses <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-            	  </a>
-          		</h4>
-        	  </div>
-        		<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false" style="height: 0px;">
-          		  <div class="panel-body">
-            		<div id="" class="list-group logged">
-
-  					  <a id="" href="#" class="list-group-item interesses-tag"> #tag1</a>
-  					  <a id="" href="#" class="list-group-item interesses-tag"> #tag2</a>
-     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag3</a>
-     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag4</a>
-     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag5</a>
-     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag6</a>
-     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag7</a>
-     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag8</a>
-     				  <a id="" href="#" class="list-group-item interesses-tag"> #tag9</a>
-
-
-					</div>
-
-					<div id="" class="list-group div-not-logged">
-					  <p id="p-side-left" class="p-type-2">
-						Faça Login ou Cadastre-se para poder usufruir dos recursos do site!<br/><br/>
-						<!-- Trigger the modal with a button -->
-						<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#login-modal">Login / Cadastro</button>
-					  </p>
-					</div>
-
-          		  </div>
-        		</div>
-      		  </div>
-      		  <!-- FIM PAINEL SIDE INTERESSES -->
-
-      		  <center id="legenda-arquivados">
-      			<p class="legenda-box">
-      		  	  <a id="filtrar-arquivados-a" class="bold-on-hover"><img src="img/card-maker-a.png" width="16" height="16"/> - Aprovados</a>
-      		  	  <a id="filtrar-arquivados-r" class="bold-on-hover"><img src="img/card-maker-r.png" width="16" height="16"/> - Reprovados</a>
-      			</p>
-      		  </center>  		  
-
-
-    	  </div>
-    	</div>
-    	<!-- FIM DA SIDEBAR -->
-
-    	  
-
-    	
-    	<!-- MAIN CONTENT -->
-        <div id="content-div" class="col-sm-8 col-sm-offset-0 blog-main">
-          <!-- DIV POSTAGENS: Cards -->
-          <div id="cards-div" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: Cards -->
-
-          <!-- DIV POSTAGENS: Cards -->
-          <div id="arquivadas-div" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: Cards -->
-
-          <!-- DIV POSTAGENS: Cards -->
-          <div id="politicos-div" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: Políticos -->
-
-          <!-- DIV POSTAGENS: Cards -->
-          <div id="ranking-div" class="blog-post">
-          	<table class="table">
-          	  <thead>
-				<tr>
-				  <th class="center-txt"><abbr title="Classificação no ranking.">#posição</abbr></th>
-				  <th class="center-txt"><abbr title="Informações resumidas da figura política.">#deputado</abbr></th>
-				  <th class="center-txt"><abbr title="Índice de aprovação média dos projetos registrados no site. É necessário que haja um somatório mínimo de 5000 votos para entrar no ranking.">#aceitaçãoGeral (%)</abbr></th>
-				  <th class="center-txt"><abbr title="Quantidade média de votos por projeto">#médiaDeVotos</abbr></th>
-				  <th class="center-txt"><abbr title="Quantidades totais de votos positivos, negativos e geral">#quantidadeDeVotos</abbr></th>
-				</tr>
-			  </thead>
-			  <tbody id="ranking-div-table" class="center-txt"></tbody>
-			</table>
-          </div>
-          <!-- END OF DIV POSTAGENS: Cards -->
-
-          <!-- DIV POSTAGENS: politico -->
-          <div id="politico-div" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: politico -->
-
-          <!-- DIV POSTAGENS: projeto -->
-          <div id="projeto-div" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: projeto -->
-
-          <!-- DIV CADASTRO -->
-          <div id="cadastro-div" class="blog-post">
-            <h1 class="blog-post-title">CADASTRO</h1>
-
-            <form id="cadastro-form" class="navbar-form">
-            	<ul id="cadastro-ul" type="none">
-            		<li class="li-fixer">
-            			<label class="control-label" for="inputPic">Foto de Perfil</label>
-						<input id="inputPic" type="file" accept="image/*" class="form-control">
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="inputName">Nome Completo <abbr title="obrigatório">*</abbr></label>
-						<input id="inputName" type="text" class="form-control" required>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="inputUsername">Nome de Usuário <abbr title="obrigatório">*</abbr></label>
-						<input id="inputUsername" type="text" class="form-control" required>	
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="datanascimento">Data de Nascimento <abbr title="obrigatório">*</abbr></label>
-						<input id="datanascimento" type="date" class="form-control" required>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="inputSex">Sexo <abbr title="obrigatório">*</abbr></label>
-						<select id="inputSex" class="form-control" required>
-							<option disabled selected hidden>Selecione o sexo</option>
-							<option value="M">Masculino</option>
-							<option value="F">Feminino</option>
-							<option value="U">Prefiro não declarar</option>
-						</select>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="cep">CEP <abbr title="obrigatório">*</abbr> (<a class="stylized-link-anchor" href="http://www.buscacep.correios.com.br/sistemas/buscacep/" title="Não sei o meu CEP.">?</a>)</label>
-						<input id="cep" name="cep" type="text" class="form-control" maxlength="8" placeholder="Apenas Números" required>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="estado">Estado</label>
-						<input id="estado" name="estado" type="text" class="form-control" disabled>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="cidade">Cidade</label>
-						<input id="cidade" name="cidade" type="text" class="form-control" disabled>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="bairro">Bairro</label>
-						<input id="bairro" name="bairro" type="text" class="form-control" disabled>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="rua">Logradouro</label>
-						<input id="rua" name="rua" type="text" class="form-control" disabled>
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="email">E-mail <abbr title="obrigatório">*</abbr></label>
-						<input id="email" type="email" class="form-control" required>		        		
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="emailconf">Confirmar E-mail <abbr title="obrigatório">*</abbr></label>
-						<input id="emailconf" type="email" class="form-control" required>		        		
-            		</li>
-            		
-            		<li class="li-fixer">
-            			<label class="control-label" for="senha">Senha <abbr title="obrigatório">*</abbr></label>
-						<input id="senha" type="password" class="form-control" required>		        		
-            		</li>
-            		<li class="li-fixer">
-            			<label class="control-label" for="senhaconf">Confirmar Senha <abbr title="obrigatório">*</abbr></label>
-						<input id="senhaconf" type="password" class="form-control" required>
-            		</li>
-            		<li class="li-fixer">
-            			<input id="receber-news" type="checkbox">
-            			<label class="control-label" for="receber-news">Desejo receber notificações por e-mail.</label>
-            		</li>
-            	</ul>
-            	<br/>
-            	<center>
-            	  <button id="btn-cad-voltar" class="btn btn-default" data-div="cards-div" onclick="showDiv(this)">Voltar</button>
-            	  <button id="btn-cad-enviar" type="submit" class="btn btn-success">Enviar</button>
-            	</center>
-            	
-          	</form>
-          </div>
-
-          <!-- DIV POSTAGENS: loading -->
-          <div id="loading" class="blog-post"></div>
-          <!-- END OF DIV POSTAGENS: Cards -->
-
-
-
-    	</div><!-- /.blog-main -->
-
-      </div>
-	</div>
-
-
-	<!-- END OF CONTENT-->
+			/*
+			 * Adiciona municípios às listas de filtros
+			 */
+			$SELECT_MUNICIPIOS = $MAIN_HTML->find(".select-2");
+			foreach ($SELECT_MUNICIPIOS as $select) {
+				$select->innertext .= '<option value="Paulista">Paulista</option>';
+				$select->innertext .= '<option value="Jaboatao dos Guararapes">Jaboatao dos Guararapes</option>';	
+			}
+
+			/*
+			 * Adiciona municípios às listas de filtros
+			 */	
+			$SELECT_PARTIDOS = $MAIN_HTML->find(".select-3");
+			foreach ($SELECT_PARTIDOS as $select) {
+				$select->innertext .= '<option value="PT">PT</option>';
+				$select->innertext .= '<option value="PSDB">PSDB</option>';
+			}
+
+			if ($DIV == "politicos") {
+				$filter_tag = "fpoliticos";
+ 			}
+ 			elseif (strpos($DIV, "politico:") === 0) {
+				$filter_tag = "fcadastro";
+				$MAIN_HTML->find("body",0)->{"data-chart"} = "1";
+ 	 			$MAIN_HTML->find("body",0)->{"data-loading"} = "0";
+			}
+			elseif ($DIV == "ranking") {
+				$filter_tag = "franking";
+				$DESTINATION = "#ranking-div-table";
+				$MAIN_HTML->find("#ranking-table", 0)->style = "display: block;";
+			 	$MAIN_HTML->find("body",0)->{"data-chart"} = "1";
+			}
+			elseif ($DIV == "perfil") {
+				$filter_tag = "fperfil";
+				$MAIN_HTML->find("body",0)->{"data-loading"} = "0";
+			}
+			elseif (strpos($DIV, "projeto:") === 0) {
+				$filter_tag = "fcadastro";
+				$MAIN_HTML->find("body",0)->{"data-loading"} = "0";
+				$MAIN_HTML->find("body",0)->{"data-chart"} = "1";
+			}
+			elseif ($DIV == "cadastro") {
+				$filter_tag = "fcadastro";
+				$MAIN_HTML->find("body",0)->{"data-loading"} = "0";
+			}
+			elseif ($DIV == "editar-info") {
+				$filter_tag = "fcadastro";
+				$MAIN_HTML->find("body",0)->{"data-loading"} = "0";
+			}
+			else {
+				$filter_tag = ($DIV == "arquivados") ? "farquivados" : "ftodosProjetos";
+
+			}
+
+			$MAIN_HTML->find("body",0)->{"data-div"} = $DIV;
+
+ 			$FILTERS = $MAIN_HTML->find(".".$filter_tag);
+			foreach ($FILTERS as $filter) {
+				$filter->style = "display: none;";	
+			}
+
+
+ 	}
+
+ 	
+	/*
+	 * Modificações de conteúdo em função da página (DIV)
+	 */
 	
+	if ($DIV == "politicos") {
+		
+		for ($i=0; $i < $QT_CARDS; $i++) { 
+
+	 		$CONTENT_HTML = file_get_html("tools/models/card_politico.html");
+
+	 		$CONTENT_HTML->find('img[id=card-img]', 0)->src = 'https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg';
+			$CONTENT_HTML->find('div[id=card-pol-head-link]', 0)->{'data-card-id'} = 'dilma-roulseff';
+			$CONTENT_HTML->find('h4[id=card-name]', 0)->innertext = 'Dilma Rouseff';
+			$CONTENT_HTML->find('img[id=card-partido-img]', 0)->src = 'http://www.ilheus24h.com.br/v1/wp-content/uploads/2013/10/logo_pt.gif';
+			$CONTENT_HTML->find('p[id=card-partido-info]', 0)->innertext = '<strong>PT</strong> - Partido do Trabalhador<br/><strong>2º</strong> mandato';
+			$CONTENT_HTML->find('p[id=card-desc]', 0)->innertext = 'Projetos registrados: 1034<br/><font color="green">740 aprovados</font>, <font color="red">294 reprovados</font>.';
+			
+
+			$CARDS[] = $CONTENT_HTML;
+	 	}
+	 	
+	}
+
+	elseif (strpos($DIV, "politico:") === 0) {
+		
+		$aux2 = strpos($DIV, ":");
+ 		$polName = substr($DIV, $aux2+1);
+
+ 	//  SELECT * FROM table WHERE name = $leiName;
+
+
+ 	 	$CONTENT_HTML = file_get_html("tools/models/politico.html");
+
+ 	 	$CONTENT_HTML->find('canvas[id=polAceitacaoChart]', 0)->{'data-yes-percent'} = 70;
+ 	 	$CONTENT_HTML->find('canvas[id=polAceitacaoChart]', 0)->{'data-no-percent'} = 30;
+
+ 	 	for ($ops=0; $ops < 10; $ops++) { 
+ 	 		$CONTENT_HTML->find('div[id=page-pol-cards]', 0)->innertext .= file_get_html("tools/models/card.html");
+ 	 	}
+
+ 	 	$CARDS[] = $CONTENT_HTML;
+
+ 	 	
+ 	}
+
+	elseif ($DIV == "ranking") {
+		
+		for ($i=0; $i < $QT_CARDS; $i++) {
+	 		$CONTENT_HTML = file_get_html("tools/models/ranking_row.html");
+
+	 		$CONTENT_HTML->find('td[id=posicao]', 0)->innertext = '1º';
+	 		$CONTENT_HTML->find('img[id=politico-pic]', 0)->src = 'https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg';
+			$CONTENT_HTML->find('a[id=a-nomePol]', 0)->innertext = 'Dilma Rouseff';
+			$CONTENT_HTML->find('a[id=a-nomePol]', 0)->{"data-card-id"} = "Dilma Rouseff";
+			$CONTENT_HTML->find('a[id=a-nomePol]', 0)->{"data-val"} .= "Dilma Rouseff";
+			$CONTENT_HTML->find('strong[id=partido-short]', 0)->innertext = "PT";
+			$CONTENT_HTML->find('em[id=n-projetos-cadastrados]', 0)->innertext = 14;
+			$CONTENT_HTML->find('canvas[class=myChart]', 0)->id = "";
+			$CONTENT_HTML->find('canvas[class=myChart]', 0)->{'data-yes-percent'} = 70;
+			$CONTENT_HTML->find('canvas[class=myChart]', 0)->{'data-no-percent'} = 30;
+			$CONTENT_HTML->find('td[id=media-votos]', 0)->innertext = 522;
+			$CONTENT_HTML->find('td[id=votos]', 0)->innertext = '5200 total<br/><font color="green">3650 sim</font><br/><font color="red">1550 não</font>';
+			
+			$CARDS[] = $CONTENT_HTML;
+ 		
+	 	}
+	 	
+		
+	}
+
+	elseif ($DIV == "perfil") {
+		
+		$CONTENT_HTML = file_get_html("tools/models/perfil.html");
+
+ 		$CONTENT_HTML->find('img[id=user-perfil-pic]', 0)->src = 'https://scontent-gru2-1.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/12119160_981882851873822_1042885828410420420_n.jpg?oh=d2e636f4e0402671f469d4b18c64bb9c&oe=5744D8D1';
+		$CONTENT_HTML->find('h2[id=user-perfil-name]', 0)->innertext = 'Guilherme Matheus';
+		$CONTENT_HTML->find('em[id=user-perfil-sex]', 0)->innertext = 'Masculino';
+		$CONTENT_HTML->find('em[id=user-perfil-age]', 0)->innertext = '19 anos';
+		$CONTENT_HTML->find('em[id=user-perfil-adress]', 0)->innertext = 'Paulista, Pernambuco';
+		$CONTENT_HTML->find('strong[id=user-perfil-total-votos]', 0)->innertext = "1034";
+		$CONTENT_HTML->find('font[id=user-perfil-votos-yes]', 0)->innertext = "740 sim";
+		$CONTENT_HTML->find('font[id=user-perfil-votos-no]', 0)->innertext = "294 não";
+		
+		for ($ops=0; $ops < 10; $ops++) { 
+			$CONTENT_HTML->find('div[id=perfil-cards]', 0)->innertext .= file_get_html("tools/models/card.html");	
+		}	
+
+		$CARDS[] = $CONTENT_HTML;
+	}
+
+	elseif (strpos($DIV, "projeto:") === 0) {
+		
+		$aux1 = strpos($DIV, ":");
+ 		$leiName = substr($DIV, $aux1+1);
+
+ 		//SELECT * FROM table WHERE name = $leiName;
+
+ 	 	$CONTENT_HTML = file_get_html("tools/models/lei.html");
+ 	 	$CONTENT_HTML->find('canvas[id=leiChart]', 0)->{'data-yes-percent'} = 70;
+ 	 	$CONTENT_HTML->find('canvas[id=leiChart]', 0)->{'data-no-percent'} = 30;
+ 	 	$CONTENT_HTML->find('p[class=p-btn-yes-no]', 0)->id = 'pls-452-1';
+		$CONTENT_HTML->find('button[id=btn-lei-yes]', 0)->{'data-parent-id'} = 'pls-452-1';
+		$CONTENT_HTML->find('button[id=btn-lei-no]', 0)->{'data-parent-id'} = 'pls-452-1';
+ 	 	$CONTENT_HTML->find('a[id=a-nomePol]', 0)->{'data-card-id'} = 'abel-salvador-mesquita-junior';
+
+ 		$to10 = "#D3312E";
+ 		$to20 = "#DC6434";
+ 		$to30 = "#E58B38";
+ 		$to40 = "#EEB03D";
+ 		$to50 = "#F9D73F";
+ 		$to60 = "#F9D73F";
+ 		$to70 = "#CBC544";
+ 		$to80 = "#9BAF47";
+ 		$to90 = "#709A4D";
+ 		$to100 = "#408752";
+
+ 		//CALCULUS
+
+
+ 	 	$CONTENT_HTML->find('path[id=path14]', 0)->style = 'fill:'.$to10.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path16]', 0)->style = 'fill:'.$to20.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path18]', 0)->style = 'fill:'.$to30.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path20]', 0)->style = 'fill:'.$to40.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path22]', 0)->style = 'fill:'.$to50.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path24]', 0)->style = 'fill:'.$to60.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path26]', 0)->style = 'fill:'.$to70.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path28]', 0)->style = 'fill:'.$to80.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path30]', 0)->style = 'fill:'.$to90.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+ 		$CONTENT_HTML->find('path[id=path32]', 0)->style = 'fill:'.$to100.';stroke:#97946b;stroke-width:0.1763;stroke-linecap:round;stroke-linejoin:round';
+
+ 	 	$CARDS[] = $CONTENT_HTML;
+	}
+
+	elseif ($DIV == "cadastro") {
+		
+		$CONTENT_HTML = file_get_html("tools/models/cadastro.html");
+		$CARDS[] = $CONTENT_HTML;
+	}
+
+	elseif ($DIV == "editar-info") {
+		
+		$CONTENT_HTML = file_get_html("tools/models/cadastro.html");
+		$CONTENT_HTML->find("button[id=btn-cad-enviar]", 0)->innertext = "Atualizar";
+		$CARDS[] = $CONTENT_HTML;
+	}
+
+	else {
+		
+		for ($i=0; $i < $QT_CARDS; $i++) { 
+
+	 		$CONTENT_HTML = file_get_html("tools/models/card.html");
+
+			$CONTENT_HTML->find('img[id=card-img]', 0)->src = 'https://git.reviewboard.kde.org/media/uploaded/files/2015/07/18/a70d8ab6-1bbf-4dcc-b11f-524c2f56b14a__picture_default_cover.jpg';
+			$CONTENT_HTML->find('img[id=card-img]', 0)->{'data-card-id'} = 'pls-452-' . $i;
+			$CONTENT_HTML->find('h4[id=card-name]', 0)->innertext = '<span class="label label-default">pls-452-2015</span>';
+			//$CONTENT_HTML->find('h4[id=card-seg]', 0)->innertext = '<span class="label label-primary">Em breve</span>';
+			$CONTENT_HTML->find('p[id=card-desc]', 0)->innertext = 'Etiam porta <b>sem malesuada magna</b> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.';
+			$CONTENT_HTML->find('p[id=card-desc]', 0)->{'data-card-id'} = 'pls-452-' . $i;
+			$CONTENT_HTML->find('img[id=card-politico-img]', 0)->src = 'https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg';
+			$CONTENT_HTML->find('p[id=card-politico-info]', 0)->innertext = 'Proposto pelo deputado<br/><a id="a-nomePol" class="altCursor formRef" data-name="div" data-val="politico:" data-card-id="dilma-roulseff">Dilma Rouseff</a> do <strong>PT</strong>';
+			$CONTENT_HTML->find('p[id=card-footer]', 0)->innertext = 'Votação: 1034, <font color="green">740 sim</font>, <font color="red"> 294 não.</font>';
+			$CONTENT_HTML->find('p[class=p-btn-yes-no]', 0)->id = 'pls-452-' . $i;
+			$CONTENT_HTML->find('button[class=btn-alt-yes]', 0)->{'data-parent-id'} = 'pls-452-' . $i;
+			$CONTENT_HTML->find('button[class=btn-alt-no]', 0)->{'data-parent-id'} = 'pls-452-' . $i;
+			//$CONTENT_HTML->find('div[id=a-nomePol]', 0)->{'data-card-id'} = "dilma-roulseff";
+			
+
+
+			
+			if ($DIV == "arquivados") {
+				if ($i % 2 == 0) {
+					$CONTENT_HTML->find('h4[id=card-status]', 0)->innertext = '<span class="label label-success">Aprovado</span>';	
+				}
+				else {
+					$CONTENT_HTML->find('h4[id=card-status]', 0)->innertext = '<span class="label label-danger">Reprovado</span>';
+				}
+			}
+
+			$CARDS[] = $CONTENT_HTML;
+	 	}
+	}
+
+	// Adiciona conteúdo gerado na seção anterior
+	if ($PAGE == 0) {
+		foreach ($CARDS as $card) {
+			$MAIN_HTML->find($DESTINATION, 0)->innertext .= $card;
+		}
+
+		echo($MAIN_HTML);
+	}
+
+	else {
+		foreach ($CARDS as $card) {
+			echo($card);
+		}
+	}
 	
 
-	<!-- Modal -->
-	<div id="login-modal" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
 
-	    <!-- Modal content-->
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        <p class="modal-title">Iniciar Sessão</p>
-	      </div>
-	      <div class="modal-body">
-	      	<center>
-		        <button class="btn btn-sm btn-primary">Login com Facebook</button>
-		        <button class="btn btn-sm btn-danger">Login com G+</button>
-		        <br/><br/><i>-- ou --</i><br/><br/>
-		        <form class="navbar-form">
-	            	<div class="form-group">
-	            		<input type="text" placeholder="E-mail / Nome de Usuário" class="form-control">
-	            	</div>
-	            	<div class="form-group">
-	              		<input type="password" placeholder="Senha" class="form-control">
-	            	</div>
-	            	<button type="submit" class="btn btn-sm btn-success">Entrar</button>
-	          	</form>
-	          	<a href="#" class="stylized-link-anchor">Esqueci minha senha.</a>
-	          	<br/><br/>
-	          	<div id="alert-not-logged" class="alert alert-danger" role="alert">
-			        <strong>Falha!</strong> Informações de login inválidas.
-			    </div>
-	          	<hr>
-	          	Não possue registro e/ou não quer logar com Facebook ou G+?
-	          	<br/><br/>
-	          	<button id="btn-cad-mod" class="btn btn-sm btn-default" type="button" data-dismiss="modal" data-div='cadastro-div' onclick="showDiv(this)">Registre-se com um e-mail</button>
-	        </center>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
-
-
-
-
-	<footer class="blog-footer">
-      <p>Alepe Digital. <i>Designed by <a href="#">@gmathx</a> / <a href="#">@icaro-ribeiro</a>.</i></p>
-    </footer>
-
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.js"></script>
-	<script type="text/javascript" src="js/Charts.js"></script>
-	<!-- <script type="text/javascript" src="js/bootstrap-slider.js"></script> -->
-	<script type="text/javascript" src="js/personal.js"></script>
-	
-</body>
-</html>
+?>

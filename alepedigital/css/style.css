@@ -61,19 +61,17 @@ svg { width: 100%; height: auto; }
 
 .card-name,
 .card-seg,
+.card-status,
 .card-lei-status {
 
 	display: inline-block;
 	font-size: 14px;
-	text-transform: uppercase;
+	text-transform: lowercase;
 	
 }
 
-.card-seg {
-	float: right;
-	margin-top: 3px;
-	text-transform: lowercase;
-	vertical-align: middle;
+.card-status {
+	text-transform: uppercase;
 }
 
 .card-lei-status,
@@ -110,6 +108,7 @@ svg { width: 100%; height: auto; }
 	padding: 6px;
 
 
+
 }
 
 .ranking-font-lg {
@@ -136,10 +135,11 @@ svg { width: 100%; height: auto; }
 .stylized-link-anchor {
 	color: #888;
 	font-size: 12px;
-	-webkit-transition: background-color 500ms ease-out 1s;
-    -moz-transition: background-color 500ms ease-out 1s;
-    -o-transition: background-color 500ms ease-out 1s;
-    transition: background-color 500ms ease-out 1s;
+	
+	-webkit-transition: color 500ms ease-out .15s;
+    -moz-transition: color 500ms ease-out .15s;
+    -o-transition: color 500ms ease-out .15s;
+    transition: color 500ms ease-out .15s;
 }
 .stylized-link-anchor:hover {
 
@@ -202,7 +202,34 @@ svg { width: 100%; height: auto; }
 	margin-left: 0px;
 }
 
+.login-input {
+	max-width: 40%;
+	display: inline-block;
+}
+
+.a-fixer {
+	display: block;
+  	padding: 3px 20px;
+  	clear: both;
+  	font-weight: normal;
+  	line-height: 1.42857143;
+  	color: #333;
+  	white-space: nowrap;
+}
+
+.a-fixer:hover,
+.a-fixer:focus {
+	color: #262626;
+  	text-decoration: none;
+  	background-color: #f5f5f5;
+}
+
+
 .not-logged {
+	
+}
+
+.logged {
 	display: none;
 }
 
@@ -231,6 +258,7 @@ svg { width: 100%; height: auto; }
 	width: 100%;
 	height: 150px;
 	overflow: hidden;
+	margin-bottom: 5px;
 }
 
 .bigger {
@@ -247,30 +275,19 @@ svg { width: 100%; height: auto; }
 	cursor: pointer;
 }
 
-.interesses-tag {
-	display: inline-block;
-	border:1px dashed #333;
-	padding: 5px;
-	margin-left: 4px;
-	margin-top: 10px;
-	margin-bottom: 5px;
+.list-interesses {
+	padding:5px;
+	font-size:11px;
+	text-align:center;
+	cursor: pointer;
 
+	
 }
 
-.interesses-tag:hover {
-	background-color: #fff;
-	color: #20579F;
-}
-
-.logged {
-	
-	display: none;	
-}
-
-.div-not-logged {
-	
-	margin: 10px;
-	
+.list-interesses a:hover {
+	text-transform: lowercase;
+	color: #000;
+	text-decoration: none;
 }
 
 .p-btn-yes-no {
@@ -331,10 +348,6 @@ svg { width: 100%; height: auto; }
 	border-right: 1px solid #eee; /*border-right: 1px dashed #20579F;*/
 }
 
-#alert-not-logged {
-	
-}
-
 #row-fixer {
 	
 	padding: 0;
@@ -357,6 +370,7 @@ svg { width: 100%; height: auto; }
 #cadastro-div,
 #politico-div,
 /*#cards-div,*/
+#perfil-div,
 #ranking-div,
 #arquivadas-div,
 #politicos-div,
@@ -419,6 +433,7 @@ svg { width: 100%; height: auto; }
 	position: absolute;
 	right: 2%;
 	display: none;
+	
 }
 
 #btn-cad-voltar {
@@ -488,25 +503,20 @@ svg { width: 100%; height: auto; }
 #search-sp,
 #search-sp-btn {
 	height: 30px;
+	width: calc(100% - 40px);
 }
 
-#f-1,
-#f-2,
-#f-3,
-#f-4,
-#f-5,
-#f-6,
-#f-7 {
+#search-sp-btn {
+	width: 40px;
+}
+
+.filters {
 	margin: 0px;
 	padding: 0px;
 
 }
 
-#f-7 {
-	display: none;
-}
-
-#select-1,#select-2,#select-3,#select-4,#select-5,#select-6,#select-7 {
+.select-fix {
 	display: block;
 	width: 100%;
 	height: 100%;
@@ -525,10 +535,6 @@ svg { width: 100%; height: auto; }
 	      box-shadow: inset 0 0px 0px rgba(0, 0, 0, .075);
 }
 
-#select-alt-1,#select-alt-2,#select-alt-3,#select-alt-4,#select-alt-5,#select-alt-6 {
-	border: 1px;
-
-}
 
 #p-side {
 	margin: 0px;
@@ -558,12 +564,47 @@ svg { width: 100%; height: auto; }
 
 }
 
+.page-perfil-spot {
+
+	width: 120px;
+	height: 120px;
+	border-right:1px dashed #333;
+	padding:5px;
+	padding-left: 0;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 10px;
+
+}
+
+.perfil-desc {
+	display: inline-block;
+	
+}
+
+.edit-perfil-spot {
+	display: inline-block;
+	float: right;
+	vertical-align: bottom;
+	margin-right: 10px;
+	
+}
+
+.edit-perfil {
+	font-size: 17px;
+}
+
+.page-perfil-img {
+	width: 100%;
+	height: 100%;
+}
+
 .page-pol-img {
 	width: 100%;
 	height: auto;
 }
 
-.page-pol-pic {
+.page-pol-spot {
 	overflow:hidden;
 	width:45%;
 	height: 250px;
@@ -572,9 +613,12 @@ svg { width: 100%; height: auto; }
 	display: inline-block;
 	vertical-align: middle;
 	margin-right: 10px;
+	margin-bottom: 0px;
 
 }
 
+
+.page-perfil-info,
 .page-pol-info {
 	display: inline-block;
 	vertical-align: middle;
@@ -582,7 +626,11 @@ svg { width: 100%; height: auto; }
 	font-size:12px;
 }
 
-
+.page-perfil-info {
+	font-size:13px;	
+	width: 80%;
+	
+}
 
 
 
