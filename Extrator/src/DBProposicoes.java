@@ -10,7 +10,7 @@ private java.sql.Connection conn;
 	public int procurarProposicao(Proposicao proposicao) throws SQLException{
 		
 		int idProposicao = 0;		
-		String sql = "SELECT idProposicao FROM proposicao WHERE numeroProposicao = '" + proposicao.getNumero() + "')";
+		String sql = "SELECT idProposicao FROM proposicao WHERE numeroProposicao = '" + proposicao.getNumero() + "'";
 		Statement st = conn.createStatement();
 		System.out.println(sql);
 		ResultSet rs = st.executeQuery(sql);
@@ -22,7 +22,6 @@ private java.sql.Connection conn;
 		return idProposicao;
 		
 	}
-	
 	public int procurarLei(Proposicao proposicao) throws SQLException{
 		
 		int idProposicao = 0;
@@ -83,32 +82,38 @@ private java.sql.Connection conn;
 	public int inserirProposicao(Proposicao proposicao) throws SQLException, ClassNotFoundException{
 		
 		conn = Connection.connect();		
-		int idStatus = this.inserirStatus(proposicao);
 		
-		String sql = "INSERT INTO proposicao (texto, justificativa, dataPublicacao, numeroProposicao, idStatus, url, idDeputado) VALUES ("
-				     + "'" + proposicao.getDescricaoCompleta()  + "', "
-				     + "'" + proposicao.getJustificativa() + "', "
-				     + "'" + proposicao.getDataPublicacao() + "', "
-				     + "'" + proposicao.getNumero() + "', "
-				     + idStatus + ","
-				     + "'" + proposicao.getUrl() + "', "
-				     + proposicao.getIdAutor() + ")";
-		Statement st = conn.createStatement();
-		System.out.println(sql);
-		int idProposicao = 0;
-		st.executeUpdate(sql,1);
-		ResultSet rs = st.getGeneratedKeys();
-        if (rs.next()){
-        	idProposicao = rs.getInt(1);
-        }
-        rs.close();
-		proposicao.setIdProposicao(idProposicao);
-		System.out.println(proposicao.getTipoProp());
-		if (proposicao.getTipoProp().contains("Lei Ordinária") || proposicao.getTipoProp().contains("Lei Complementar")|| proposicao.getTipoProp().contains("Emenda")){
-			idProposicao = this.InserirLei(proposicao);
+		int idProposicao = this.procurarProposicao(proposicao);
+		if (idProposicao == 0){
+		
+			int idStatus = this.inserirStatus(proposicao);
+			
+			String sql = "INSERT INTO proposicao (texto, justificativa, dataPublicacao, numeroProposicao, idStatus, url, idDeputado) VALUES ("
+					     + "'" + proposicao.getDescricaoCompleta()  + "', "
+					     + "'" + proposicao.getJustificativa() + "', "
+					     + "'" + proposicao.getDataPublicacao() + "', "
+					     + "'" + proposicao.getNumero() + "', "
+					     + idStatus + ","
+					     + "'" + proposicao.getUrl() + "', "
+					     + proposicao.getIdAutor() + ")";
+			Statement st = conn.createStatement();
+			System.out.println(sql);
+			st.executeUpdate(sql,1);
+			ResultSet rs = st.getGeneratedKeys();
+	        if (rs.next()){
+	        	idProposicao = rs.getInt(1);
+	        }
+	        rs.close();
+			proposicao.setIdProposicao(idProposicao);
+			System.out.println(proposicao.getTipoProp());
+			if (proposicao.getTipoProp().contains("Lei Ordinária") || proposicao.getTipoProp().contains("Lei Complementar")|| proposicao.getTipoProp().contains("Emenda")){
+				idProposicao = this.InserirLei(proposicao);
+			}
+			
+			conn.close();
+			return idProposicao;
 		}
 		
-		conn.close();
 		return idProposicao;
 	}
 
@@ -130,7 +135,7 @@ private java.sql.Connection conn;
 	private int procurarSessao(String data) throws SQLException {
 		
 		int idSessaoPlenaria = 0;
-		String sql = "SELECT idSessaoPlenaria FROM sessaoplenaria WHERE dataSessao = " + data;
+		String sql = "SELECT idSessaoPlenaria FROM sessaoplenaria WHERE dataSessao = " + data +"";
 		Statement st = conn.createStatement();
 		System.out.println(sql);
 		ResultSet rs = st.executeQuery(sql);		
@@ -150,7 +155,7 @@ private java.sql.Connection conn;
 			return idSessao;
 		}
 		
-		String sql = "INSERT INTO sessaoplenaria (dataSessao) VALUES ("+ data + "')";
+		String sql = "INSERT INTO sessaoplenaria (dataSessao) VALUES ("+ data + ")";
 		Statement st = conn.createStatement();
 		System.out.println(sql);
 		idSessao = st.executeUpdate(sql,1);		
@@ -160,7 +165,6 @@ private java.sql.Connection conn;
 	private void inserirDiscussoes(Proposicao prop) throws SQLException {
 		
 		for (String data: prop.getResultadoDiscussoes().keySet()) {
-			
 			int idSessao = this.InserirSessao(data);
 			if (idSessao != 0){
 				continue;

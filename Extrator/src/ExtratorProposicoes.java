@@ -1,4 +1,7 @@
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -40,7 +44,6 @@ public class ExtratorProposicoes {
 	}
 	
 	public void capturarLinks(String url, String tipoProp, String autor, String tipoPes, int numPagina) {
-
 		String conteudo = "";
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost("http://www.alepe.pe.gov.br/proposicoes/");
@@ -49,9 +52,9 @@ public class ExtratorProposicoes {
 		nvps.add(new BasicNameValuePair("field-proposicoes-filtro", tipoPes));
 		nvps.add(new BasicNameValuePair("field-proposicoes", autor));
 		nvps.add(new BasicNameValuePair("pagina", Integer.toString(numPagina)));
-
+		
 		try {
-			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps,"UTF-8"));
 			HttpResponse response = client.execute(httpPost);
 			HttpEntity entity = response.getEntity();
 			conteudo = EntityUtils.toString(entity);
@@ -77,7 +80,7 @@ public class ExtratorProposicoes {
 		
 	}	
 	
-	private int salvarLinks(String conteudo, String autor, boolean primeiraConsulta){
+	private int salvarLinks(String conteudo, String autor, boolean primeiraConsulta) throws IOException{
 		
 		int numPaginas = 0;
 		StringTokenizer st = new StringTokenizer(conteudo,"<>");
@@ -91,8 +94,11 @@ public class ExtratorProposicoes {
 				st.nextToken();
 				st.nextToken();
 				atual = st.nextToken();
+				FileWriter arq = new FileWriter("C:/Users/Icaro/Desktop/autor.txt");
+				PrintWriter gravarArq = new PrintWriter(arq);
+				gravarArq.print(conteudo);
+				arq.close();
 				numPaginas = (Integer.parseInt(atual) / 25) + 1;
-				System.out.println(numPaginas);
 			}
 			
 			else if(atual.contains("a href=/proposicao-texto-completo/")){
@@ -172,13 +178,13 @@ public class ExtratorProposicoes {
 					//System.out.println("Localização: " + prop.getLocalizacao());
 				}
 				
-				else if(atual.contains("Publicação")){
+				else if(atual.contains(" Publicação:")){
 					st.nextToken();
 					st.nextToken();
 					st.nextToken();
 					String dataPub = st.nextToken();
 					prop.setDataPublicacao(dataPub);
-					//System.out.println("Data Publicacao: " + prop.getDataPublicacao());
+					System.out.println("Data Publicacao: " + prop.getDataPublicacao());
 				}
 			}	
 			
@@ -289,7 +295,12 @@ public class ExtratorProposicoes {
 					st.nextToken();
 					st.nextToken();
 					data = st.nextToken();
-					prop.getResultadoDiscussoes().put(data, resultado);
+					if (data.contains("  ")){
+						
+					}
+					else{
+						prop.getResultadoDiscussoes().put(data, resultado);
+					}
 				}
 			}				
 			

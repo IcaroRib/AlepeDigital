@@ -7,6 +7,8 @@ public class App {
 	
 	public static void main(String[] args) {
 		
+		Teste.teste();
+		
 		/*ExtratorDeputado ed = new ExtratorDeputado();
 		ed.capturarLinks("http://www.alepe.pe.gov.br/parlamentares/");
 		for (String url : ed.getListaLinks()) {
@@ -27,7 +29,7 @@ public class App {
 			ExtratorProposicoes ep = new ExtratorProposicoes();
 			Proposicao prop = new Proposicao();
 			System.out.println("Extraindo proposicoes candidato = " + deputado.getNomePolitico());
-			ep.capturarLinks("http://www.alepe.pe.gov.br/proposicoes/", "Projetos", deputado.getNomePolitico(), "Por Autor", 1);
+			ep.capturarLinks("http://www.alepe.pe.gov.br/proposicoes/", "projetos", deputado.getNomePolitico(), "autor", 1);
 			for (String url : ep.getListaLinksProp()) {
 				System.out.println("Extraindo proposicoes URL = " + url);
 				ep.ExtrairDadosProp(url, deputado.getIdDeputado());

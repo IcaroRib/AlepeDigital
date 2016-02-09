@@ -38,26 +38,39 @@ public class Proposicao {
 		return dataPublicacao;
 	}
 	public void setDataPublicacao(String dataPublicacao) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");		
-		java.util.Date parsed;
-		try {
-			parsed = sdf.parse(dataPublicacao);
-			this.dataPublicacao = new Date(parsed.getTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if(dataPublicacao.contains("		")){
+			System.out.print("");
+		}
+		
+		else{
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");		
+			java.util.Date parsed;
+			try {
+				parsed = sdf.parse(dataPublicacao);
+				this.dataPublicacao = new Date(parsed.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	public Date getDataInsercao() {
 		return dataInsercao;
 	}
 	public void setDataInsercao(String dataInsercao) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");		
-		java.util.Date parsed;
-		try {
-			parsed = sdf.parse(dataInsercao);
-			this.dataInsercao = new Date(parsed.getTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
+		
+		if(dataInsercao.contains("  ")){
+
+		}
+		
+		else{
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");		
+			java.util.Date parsed;
+			try {
+				parsed = sdf.parse(dataInsercao);
+				this.dataInsercao = new Date(parsed.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	public HashMap<String, String> getResultadoDiscussoes() {
