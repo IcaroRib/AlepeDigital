@@ -16,26 +16,81 @@
 	$FILTER_PARTIDO = (!empty($_POST["f-partido"])) ? $_POST["f-partido"] : "";
 	$FILTER_STATUS_LEI = (!empty($_POST["f-status-lei"])) ? $_POST["f-status-lei"] : "";
 	$FILTER_RANKING_ORDER = (!empty($_POST["f-ranking-order"])) ? $_POST["f-ranking-order"] : "aceitacaoGeral";
+	// --------------------------------------------------------------------------------------------------------
+	$LOGGED = 0;
+	$USER_FULL_NAME = "";
+	$USER_USERNAME = "";
+	$USER_EMAIL = "";
+	$USER_IMG_SCR = "";
+	// --------------------------------------------------------------------------------------------------------
 	$BUSCA = (!empty($_POST["busca"])) ? $_POST["busca"] : "";
 	$DESTINATION = "#main-content-spot";
 	$PAGE = (!empty($_POST["page"])) ? $_POST['page'] : 0;
+	// --------------------------------------------------------------------------------------------------------
  	$QT_CARDS = 9;
  	$INICIO = $QT_CARDS * $PAGE;
  	$CARDS = [];
 
 
  	if ($PAGE == 0) {
- 			$MAIN_HTML = file_get_html("tools/models/main.html");
+ 			$MAIN_HTML = file_get_html("html/main.html");
 
-			// Imagem de usuário no topo (se logado)	
-			$MAIN_HTML->find("img[id=user-pic]", 0)->src = "https://scontent-gru2-1.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/12119160_981882851873822_1042885828410420420_n.jpg?oh=d2e636f4e0402671f469d4b18c64bb9c&oe=5744D8D1";
+ 			if ($LOGGED) {
+				$not_logged_components = $MAIN_HTML->find(".not-logged");
+				foreach ($not_logged_components as $nlc) {
+					$nlc->style .= "display:none;";
+				}
 
-			// Altera nome de usuário em botões
-			$BTN_USER_OPT = $MAIN_HTML->find("button[class=btn-user-opt]");
-			foreach ($BTN_USER_OPT as $button) {
-				$button->innertext .= "Guilherme <span class='caret'></span>";
+				/*
+
+				$MAIN_HTML->find("img[id=user-pic]", 0)->src = $USER_IMG_SCR;
+
+				
+				// Altera nome de usuário em botões (se logado)				
+				$to_erase = substr($USER_FULL_NAME, strpos($USER_FULL_NAME," ")); //parte do nome completo a ser apagada
+				$USER_FIRST_NAME = str_replace($to_erase, "", $USER_FULL_NAME);
+				$BTN_USER_OPT = $MAIN_HTML->find("button[class=btn-user-opt]");				
+				foreach ($BTN_USER_OPT as $button) {
+					$button->innertext .= $USER_FIRST_NAME ." <span class='caret'></span>";
+				}
+
+				// Adiciona os interesses (tags) do usuário à página (se logado)
+				$DIV_TAGS = $MAIN_HTML->find(".list-interesses");
+				$aux_array = array();
+				$SQL = "SELECT marcador,COUNT(marcador) AS qtTags 
+						FROM usuario_lei_tag
+						INNER JOIN usuario ON usuario_lei_tag.usuario_idUsuario = usuario.idUsuario;";
+				$RETORNO = runQuery($SQL);
+				if ($RETORNO) {
+					while($row = mysql_fetch_assoc($RETORNO)) {
+				    		$array_toAppend = array();
+				    		array_push($array_toAppend, $row["marcador"], $row["qtTags"]);
+							array_push($aux_array, $array_toAppend);
+				    }
+
+				    foreach ($DIV_TAGS as $aTag) {
+						$aTag->innertext = addTags(0,$aux_array);	
+					}	
+				} else 
+				{
+					foreach ($DIV_TAGS as $aTag) {
+						$aTag->innertext = "Nenhum marcador adicionado";
+					}
+				}
+				unset($SQL,$RETORNO);
+
+				*/
+
 			}
 
+			else {
+				$logged_components = $MAIN_HTML->find(".logged");
+				foreach ($logged_components as $lc) {
+					$lc->style .= "display:none;";
+				}	
+			}
+
+			
 			// Evento para personalizar menu no topo de acordo com a atual página (DIV)
 			$BLOG_NAV_ITEM = $MAIN_HTML->find("a[class=blog-nav-item]");
 			foreach ($BLOG_NAV_ITEM as $a) {
@@ -46,18 +101,7 @@
 				
 			}
 
-			/*
-			 * Adiciona os interesses (tags) do usuário à página (se logado)
-			 */
-			$DIV_TAGS = $MAIN_HTML->find(".list-interesses");
-			$aux_array = array(array('saúde',1),array('política',2),array('infraestrutura',5),array('social',3));
-			foreach ($DIV_TAGS as $aTag) {
-				$aTag->innertext = addTags($aux_array);	
-			}
-			
-			/*
-			 * Adiciona municípios às listas de filtros
-			 */
+			// Adiciona municípios às listas de filtros
 			$SELECT_MUNICIPIOS = $MAIN_HTML->find(".select-2");
 			foreach ($SELECT_MUNICIPIOS as $select) {
 				$select->innertext .= '<option value="Paulista">Paulista</option>';
@@ -65,13 +109,41 @@
 			}
 
 			/*
-			 * Adiciona municípios às listas de filtros
-			 */	
+			$SELECT_MUNICIPIOS = $MAIN_HTML->find(".select-2");
+			$SQL = "SELECT localizacao FROM status;";
+			$RETORNO = runQuery($SQL);
+			if ($RETORNO) {
+			    while($row = mysql_fetch_assoc($RETORNO)) {
+			    	foreach ($SELECT_MUNICIPIOS as $select) {
+
+						$select->innertext .= '<option value="'. $row["localizacao"] .'">'. $row["localizacao"] .'</option>';	
+					}
+			    }
+			}
+			unset($SQL,$RETORNO);
+			*/
+
+			// Adiciona municípios às listas de filtros
 			$SELECT_PARTIDOS = $MAIN_HTML->find(".select-3");
 			foreach ($SELECT_PARTIDOS as $select) {
 				$select->innertext .= '<option value="PT">PT</option>';
 				$select->innertext .= '<option value="PSDB">PSDB</option>';
 			}
+
+			/*
+			$SELECT_PARTIDOS = $MAIN_HTML->find(".select-3");
+			$SQL = "SELECT sigla FROM partido;";
+			$RETORNO = runQuery($SQL);
+			if ($RETORNO) {
+			 	while($row = mysql_fetch_assoc($RETORNO)) {
+			 		foreach ($SELECT_PARTIDOS as $select) {
+			 			$select->innertext .= '<option value="'.$row["sigla"].'">'.$row["sigla"].'</option>';
+			 		}
+			    }
+			}
+			unset($SQL,$RETORNO);
+			*/
+
 
 			if ($DIV == "politicos") {
 				$filter_tag = "fpoliticos";
@@ -128,7 +200,7 @@
 		
 		for ($i=0; $i < $QT_CARDS; $i++) { 
 
-	 		$CONTENT_HTML = file_get_html("tools/models/card_politico.html");
+	 		$CONTENT_HTML = file_get_html("html/card_politico.html");
 
 	 		$CONTENT_HTML->find('img[id=card-img]', 0)->src = 'https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg';
 			$CONTENT_HTML->find('div[id=card-pol-head-link]', 0)->{'data-card-id'} = 'dilma-roulseff';
@@ -140,6 +212,36 @@
 
 			$CARDS[] = $CONTENT_HTML;
 	 	}
+
+	 	/*
+		$SQL = "SELECT *
+				FROM deputado
+				LEFT JOIN partido ON deputado.idPartido = partido.idPartido
+				UNION
+				(
+					SELECT *
+					FROM deputado
+					RIGHT JOIN partido ON deputado.idPartido = partido.idPartido
+				)
+				LIMIT $INICIO, $QT_CARDS;";
+		$RETORNO = runQuery($SQL);
+		if ($RETORNO) {
+		 	while($row = mysql_fetch_assoc($RETORNO)) {
+		 		$CONTENT_HTML = file_get_html("html/card_politico.html");
+
+		 		$CONTENT_HTML->find('img[id=card-img]', 0)->src = $row['imgScr'];
+				$CONTENT_HTML->find('div[id=card-pol-head-link]', 0)->{'data-card-id'} = str_replace(" ", '-', strtolower($row['nomePolitico']));
+				$CONTENT_HTML->find('h4[id=card-name]', 0)->innertext = $row['nomePolitico'];
+				$CONTENT_HTML->find('img[id=card-partido-img]', 0)->src = $row['partImgScr'];
+				$CONTENT_HTML->find('p[id=card-partido-info]', 0)->innertext = '<strong>'. $row['sigla'] .'</strong> - <strong>1º</strong> mandato';
+				$CONTENT_HTML->find('p[id=card-desc]', 0)->innertext = 'Projetos registrados: 1034<br/><font color="green">740 aprovados</font>, <font color="red">294 reprovados</font>.';
+				
+
+				$CARDS[] = $CONTENT_HTML;
+			}
+		}
+		unset($SQL,$RETORNO);
+	 	*/
 	 	
 	}
 
@@ -151,13 +253,13 @@
  	//  SELECT * FROM table WHERE name = $leiName;
 
 
- 	 	$CONTENT_HTML = file_get_html("tools/models/politico.html");
+ 	 	$CONTENT_HTML = file_get_html("html/politico.html");
 
  	 	$CONTENT_HTML->find('canvas[id=polAceitacaoChart]', 0)->{'data-yes-percent'} = 70;
  	 	$CONTENT_HTML->find('canvas[id=polAceitacaoChart]', 0)->{'data-no-percent'} = 30;
 
  	 	for ($ops=0; $ops < 10; $ops++) { 
- 	 		$CONTENT_HTML->find('div[id=page-pol-cards]', 0)->innertext .= file_get_html("tools/models/card.html");
+ 	 		$CONTENT_HTML->find('div[id=page-pol-cards]', 0)->innertext .= file_get_html("html/card.html");
  	 	}
 
  	 	$CARDS[] = $CONTENT_HTML;
@@ -168,7 +270,7 @@
 	elseif ($DIV == "ranking") {
 		
 		for ($i=0; $i < $QT_CARDS; $i++) {
-	 		$CONTENT_HTML = file_get_html("tools/models/ranking_row.html");
+	 		$CONTENT_HTML = file_get_html("html/ranking_row.html");
 
 	 		$CONTENT_HTML->find('td[id=posicao]', 0)->innertext = '1º';
 	 		$CONTENT_HTML->find('img[id=politico-pic]', 0)->src = 'https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg';
@@ -192,7 +294,7 @@
 
 	elseif ($DIV == "perfil") {
 		
-		$CONTENT_HTML = file_get_html("tools/models/perfil.html");
+		$CONTENT_HTML = file_get_html("html/perfil.html");
 
  		$CONTENT_HTML->find('img[id=user-perfil-pic]', 0)->src = 'https://scontent-gru2-1.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/12119160_981882851873822_1042885828410420420_n.jpg?oh=d2e636f4e0402671f469d4b18c64bb9c&oe=5744D8D1';
 		$CONTENT_HTML->find('h2[id=user-perfil-name]', 0)->innertext = 'Guilherme Matheus';
@@ -204,7 +306,7 @@
 		$CONTENT_HTML->find('font[id=user-perfil-votos-no]', 0)->innertext = "294 não";
 		
 		for ($ops=0; $ops < 10; $ops++) { 
-			$CONTENT_HTML->find('div[id=perfil-cards]', 0)->innertext .= file_get_html("tools/models/card.html");	
+			$CONTENT_HTML->find('div[id=perfil-cards]', 0)->innertext .= file_get_html("html/card.html");	
 		}	
 
 		$CARDS[] = $CONTENT_HTML;
@@ -217,13 +319,61 @@
 
  		//SELECT * FROM table WHERE name = $leiName;
 
- 	 	$CONTENT_HTML = file_get_html("tools/models/lei.html");
+ 	 	$CONTENT_HTML = file_get_html("html/lei.html");
  	 	$CONTENT_HTML->find('canvas[id=leiChart]', 0)->{'data-yes-percent'} = 70;
  	 	$CONTENT_HTML->find('canvas[id=leiChart]', 0)->{'data-no-percent'} = 30;
  	 	$CONTENT_HTML->find('p[class=p-btn-yes-no]', 0)->id = 'pls-452-1';
 		$CONTENT_HTML->find('button[id=btn-lei-yes]', 0)->{'data-parent-id'} = 'pls-452-1';
 		$CONTENT_HTML->find('button[id=btn-lei-no]', 0)->{'data-parent-id'} = 'pls-452-1';
  	 	$CONTENT_HTML->find('a[id=a-nomePol]', 0)->{'data-card-id'} = 'abel-salvador-mesquita-junior';
+
+
+		if ($LOGGED) {
+			foreach ($CONTENT_HTML->find('a[class=a-add-edit]') as $a) {
+	 	 		$a->{'data-target'} = '#interesses-modal';
+	 	 	}
+			/*
+ 	 		
+
+	 	 	// Adiciona os interesses (tags) do usuário à postagem (se logado)
+			$DIV_TAGS_PROJETO = $MAIN_HTML->find(".list-interesses-projeto");
+			$aux_array = array();
+			$SQL = "SELECT marcador
+					FROM usuario_lei_tag
+					INNER JOIN proposicao ON usuario_lei_tag.proposicao_idProposicao = proposicao.idProposicao
+					WHERE usuario_lei_tag.usuario_idUsuario IN (SELECT idUsuario 
+																FROM usuario
+																WHERE email = $USER_EMAIL)";
+			$RETORNO = runQuery($SQL);
+			if ($RETORNO) {
+			    while($row = mysql_fetch_assoc($RETORNO)) {
+			    	array_push($aux_array, $row["marcador"]);
+			    }
+
+			    foreach ($DIV_TAGS_PROJETO as $aTag) {
+					$aTag->innertext = addTags(1,$aux_array);	
+				}
+
+				$INPUT_INTERESSES = $MAIN_HTML->find("input[id=input-edit-interesses]", 0);
+				for ($i=0; $i < sizeof($aux_array); $i++) { 
+					$INPUT_INTERESSES->value .= $aux_array[$i];
+					if ($i !== sizeof($aux_array) - 1) {
+						$INPUT_INTERESSES->value .= ",";
+					}
+				}
+			}
+
+			else {
+				foreach ($DIV_TAGS_PROJETO as $aTag) {
+					$aTag->innertext = "Nenhum marcador adicionado";
+				}
+			}
+			*/
+ 	 	}
+ 	 	
+
+
+
 
  		$to10 = "#D3312E";
  		$to20 = "#DC6434";
@@ -255,13 +405,13 @@
 
 	elseif ($DIV == "cadastro") {
 		
-		$CONTENT_HTML = file_get_html("tools/models/cadastro.html");
+		$CONTENT_HTML = file_get_html("html/cadastro.html");
 		$CARDS[] = $CONTENT_HTML;
 	}
 
 	elseif ($DIV == "editar-info") {
 		
-		$CONTENT_HTML = file_get_html("tools/models/cadastro.html");
+		$CONTENT_HTML = file_get_html("html/cadastro.html");
 		$CONTENT_HTML->find("button[id=btn-cad-enviar]", 0)->innertext = "Atualizar";
 		$CARDS[] = $CONTENT_HTML;
 	}
@@ -270,7 +420,7 @@
 		
 		for ($i=0; $i < $QT_CARDS; $i++) { 
 
-	 		$CONTENT_HTML = file_get_html("tools/models/card.html");
+	 		$CONTENT_HTML = file_get_html("html/card.html");
 
 			$CONTENT_HTML->find('img[id=card-img]', 0)->src = 'https://git.reviewboard.kde.org/media/uploaded/files/2015/07/18/a70d8ab6-1bbf-4dcc-b11f-524c2f56b14a__picture_default_cover.jpg';
 			$CONTENT_HTML->find('img[id=card-img]', 0)->{'data-card-id'} = 'pls-452-' . $i;

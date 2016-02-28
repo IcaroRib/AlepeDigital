@@ -4,6 +4,12 @@
 
  var CURRENT_PAGE = 0;
  var CURRENT_DIV = document.getElementById("body").getAttribute("data-div");
+ var FILTER_ODENAR_POR = 'recentes';
+ var FILTER_MUNICIPIO = '';
+ var FILTER_PARTIDO = '';
+ var FILTER_STATUS_LEI = '';
+ var FILTER_RANKING_ORDER = '';
+ var BUSCA = '';
 
  /*
   *
@@ -219,7 +225,13 @@ function cepRequest() {
 
 
 function filterSubmit(elem) {
-    elem.parentElement.parentElement.submit();
+    if (elem.getAttribute("name") == "div") { CURRENT_DIV = this.value; }
+    else if (elem.getAttribute("name") == "f-ordenarPor") { FILTER_ODENAR_POR = this.value; }
+    else if (elem.getAttribute("name") == "f-municipio") { FILTER_MUNICIPIO = this.value; }
+    else if (elem.getAttribute("name") == "f-partido") { FILTER_PARTIDO = this.value; }
+    else if (elem.getAttribute("name") == "f-status-lei") { FILTER_STATUS_LEI = this.value; }
+    else if (elem.getAttribute("name") == "f-status-lei") { FILTER_STATUS_LEI = this.value; }
+    loadPage();
 }
 
 
