@@ -175,7 +175,13 @@ function loadPage(){
 
             url : 'index.php', /* URL que será chamada */ 
             type: 'POST',
-            data: 'div=' + CURRENT_DIV + '&page=' + CURRENT_PAGE,
+            data: 'div=' + CURRENT_DIV + 
+                  '&page=' + CURRENT_PAGE /*+
+                  '&f-ordenarPor=' + FILTER_ODENAR_POR +
+                  '&f-municipio=' + FILTER_MUNICIPIO +
+                  '&f-partido=' + FILTER_PARTIDO +
+                  '&f-status-lei=' + FILTER_STATUS_LEI +
+                  '&f-ranking-order=' + FILTER_RANKING_ORDER*/ ,
             cache: false,
             success: function(data){
 
@@ -230,7 +236,7 @@ function filterSubmit(elem) {
     else if (elem.getAttribute("name") == "f-municipio") { FILTER_MUNICIPIO = this.value; }
     else if (elem.getAttribute("name") == "f-partido") { FILTER_PARTIDO = this.value; }
     else if (elem.getAttribute("name") == "f-status-lei") { FILTER_STATUS_LEI = this.value; }
-    else if (elem.getAttribute("name") == "f-status-lei") { FILTER_STATUS_LEI = this.value; }
+    else if (elem.getAttribute("name") == "f-ranking-order") { FILTER_RANKING_ORDER = this.value; }
     loadPage();
 }
 

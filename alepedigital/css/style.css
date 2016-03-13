@@ -91,7 +91,7 @@ svg { width: 100%; height: auto; }
 
 .card-box,
 .legenda-box {
-	border: 1px dashed #000;
+	
 	font-size: inherit;
 	background-color: #fff;
 	padding: 6px;
@@ -306,9 +306,9 @@ svg { width: 100%; height: auto; }
 }
 
 .lei-img {
-	border: 1px dashed #333;
+	border: 1px solid lightgray;
 	margin-right: 10px;
-	padding: 5px;
+	padding: 3px;
 	width: 300px;
 	height: 200px;
 		
@@ -448,16 +448,13 @@ svg { width: 100%; height: auto; }
 
 #main-sidebar {
 	position: relative;
-	border: 0px;
 	border-right: 1px;
 	padding-top: 20px;
 	padding-bottom: 20px;
 	padding-right: 30px;
 	padding-left: 5px;
 	margin-bottom: 40px;
-	margin-right: 30px;
-	border-right-color: #011B53;
-	border-style: dashed;
+	margin-right: 30px;	
 	width: 18%;
 	max-width: 188px;
 	min-width: 140px;
@@ -551,10 +548,6 @@ svg { width: 100%; height: auto; }
 	border: 0px;
 	padding: 0px;
 	margin: 0px;
-	border-bottom: 1px;
-	border-bottom-color: #011B53;
-	border-style: dashed;
-
 	padding-right: 40px;
 	padding-left: 40px;
 	padding-bottom: 10px;
@@ -608,7 +601,7 @@ svg { width: 100%; height: auto; }
 	overflow:hidden;
 	width:45%;
 	height: 250px;
-	border-right:1px dashed #333;
+	border-right:1px solid lightgray;
 	padding-right:5px;
 	display: inline-block;
 	vertical-align: middle;
