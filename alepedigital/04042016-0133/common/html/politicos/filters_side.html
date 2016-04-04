@@ -1,0 +1,26 @@
+<div class="panel-heading" role="tab" id="headingTwo">
+	<h4 class="panel-title">
+    	<a id="menu-filtrar" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        	Filtrar <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
+        </a>
+    </h4>
+</div>
+<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false" style="height: 0px;">
+	<div class="panel-body">
+    	<div class="list-group">
+        	<div class="list-group-item franking filters" style="">
+				<select name="f-municipio" class="form-control select-fix select-2" onchange="filterSubmit(this)">
+          	  		<option disabled selected hidden>Município</option>
+				</select>
+			</div>
+
+
+			<div class="list-group-item franking filters" style="">  
+          		<select name="f-partido" class="form-control select-fix select-3" onchange="filterSubmit(this)">
+          			<option disabled selected hidden>Partido</option>
+				</select>
+			</div>
+
+		</div>
+	</div>
+</div>

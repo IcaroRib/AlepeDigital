@@ -1,0 +1,36 @@
+<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+Filtrar <span class="caret"></span>
+</button>
+<ul class="dropdown-menu" style="font-size:12px;">				  	
+	<li class="filters">
+		<select class="form-control select-fix" onchange="filterSubmit(this)">
+	  	  <option value="recentes" selected>Mais Recentes</option>
+		  <option value="comentados">Mais Comentados</option>
+		  <option value="discutidos">Mais Discutidos</option>
+		  <option value="votados">Mais Votados</option>
+		  <option value="amigos">Amigos Votaram</option>
+		</select>	
+	</li>
+	<li class="filters">
+		<select class="form-control select-fix" onchange="filterSubmit(this)">
+	  	  <option disabled selected hidden>TEMPTEMPTEMP</option> 
+		</select>
+	</li>
+	<li class="filters">
+		<select class="form-control select-fix select-3" onchange="filterSubmit(this)">
+	  	  <option disabled selected hidden>Partido</option>
+		</select>
+	</li>
+	<li class="filters">
+    	<select class="form-control select-fix" onchange="filterSubmit(this)">
+      	  <option disabled selected hidden>Status</option>
+		  <option value="aprovados">Aprovados</option>
+		  <option value="reprovados">Reprovados</option>
+		</select>
+    </li>
+	<li class="filters">
+		<select class="form-control select-fix" title="Em breve!" disabled>
+	  	  <option disabled selected hidden>Categoria</option>
+		</select>
+	</li>
+</ul>
