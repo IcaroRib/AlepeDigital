@@ -7,7 +7,7 @@ CURRENT_PAGE = 0;
 function ptype2alt(){
   var windowWidth = window.innerWidth;
   var temp1;  
-  if (windowWidth<992) {    
+  if (windowWidth<992) {
     temp1 = '<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#login-modal">Login</button><br/>-- ou --<br/><button type="button" class="btn btn-xs btn-info" onclick="showDiv(\'cadastro-div\')">Cadastre-se</button>';
   }
   else{
@@ -167,37 +167,56 @@ function load_content(){
 
 function yesNoEvent(arg1,arg3) {
 
+    if(LOGGED){
+        console.log('true');
+    }
+    else if (LOGGED != true){
+        alert("É preciso estar logado para votar");
+        return false;
+    }
+
     var parent = document.getElementById(arg1.getAttribute("data-parent-id"));
     var arg2;
 
-    if (arg1.getAttribute("data-val") == "yes") {  //if arg is the "sim" button
+    if (arg1.getAttribute("data-val") == "yes") { //if arg is the "sim" button
         arg2 = parent.getElementsByClassName("btn-alt-no")[0];
-    }
-
-    else {
+        var url = 'db/DBLei.php';
+        var data = {
+            f: 'yesNoInsert',
+            voto: 'votosNao',
+            lei: parent.getAttribute("id"),
+        }
+        $.post(url,data,teste);
+    } else {
         arg2 = parent.getElementsByClassName("btn-alt-yes")[0];
+        var url = 'db/DBLei.php';
+        var data = {
+            f: 'yesNoInsert',
+            voto: 'votosSim',
+            lei: parent.getAttribute("id"),
+        }
+        $.post(url,data,teste);
     }
 
-    if (arg1.getAttribute("data-status") != 1) {      
+    if (arg1.getAttribute("data-status") != 1) {
 
         arg1.style.opacity = 1;
         arg2.style.opacity = .25;
         arg1.setAttribute("data-status", "1");
         arg2.setAttribute("data-status", "0");
 
-        if (arg3==1) {
+        if (arg3 == 1) {
             arg1.parentElement.parentElement.style.backgroundColor = "#FFFFC9";
         }
-    }
 
-    else {
+    } else {
         arg1.setAttribute("data-status", "0");
         arg2.setAttribute("data-status", "0");
         arg1.style.opacity = 1;
         arg2.style.opacity = 1;
-        
-        if (arg3==1) {
-          arg1.parentElement.parentElement.style.backgroundColor = "#f0f0f0";
+
+        if (arg3 == 1) {
+            arg1.parentElement.parentElement.style.backgroundColor = "#f0f0f0";
         }
     }
 }
