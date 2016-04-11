@@ -1,0 +1,15 @@
+<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Filtrar <span class="caret"></span>
+</button>
+<ul class="dropdown-menu" style="font-size:12px;">
+  	<li class="filters">
+    	<select name="f-partido" class="form-control select-fix select-3" onchange="filterSubmit(this)">
+      	  <option disabled selected hidden>Partido</option>
+		</select>
+    </li>
+    <li><a class="formRef a-fixer" data-name="f-ranking-order" data-val="aceitacaoGeral">Aceitação Geral</a></li>
+	<li><a class="formRef a-fixer" data-name="f-ranking-order" data-val="votosProjeto">Votos por Projeto</a></li>
+	<li><a class="formRef a-fixer" data-name="f-ranking-order" data-val="totalVotos">Total de Votos</a></li>
+	<li><a class="formRef a-fixer" data-name="f-ranking-order" data-val="votosSim">Votos Sim</a></li>
+	<li><a class="formRef a-fixer" data-name="f-ranking-order" data-val="votosNao">Votos Não</a></li>
+</ul>

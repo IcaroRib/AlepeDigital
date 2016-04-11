@@ -1,0 +1,25 @@
+<div class="panel-heading" role="tab" id="headingTwo">
+		<h4 class="panel-title">
+  	  <a id="menu-filtrar" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+    	    Filtrar <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
+  	  </a>
+		</h4>
+  </div>
+  <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false" style="height: 0px;">
+		<div class="panel-body">
+			<div class="list-group-item filters" style="">  
+          		<select name="f-partido" class="form-control select-fix select-3" onchange="filterSubmit(this)">
+          	  		<option disabled selected hidden>Partido</option>
+				</select>
+			</div>
+  			<div class="list-group">
+    	  		<div class="list-group" style="">
+      	  			<button class="list-group-item" name="f-ranking-order" type="submit" value="aceitacaoGeral">Aceitação Geral</button>
+	    			<button class="list-group-item" name="f-ranking-order" type="submit" value="votosProjeto">Votos por Projeto</button>
+	    			<button class="list-group-item" name="f-ranking-order" type="submit" value="totalVotos">Total de Votos</button>
+	    			<button class="list-group-item" name="f-ranking-order" type="submit" value="votosSim">Votos Sim</button>
+	    			<button class="list-group-item" name="f-ranking-order" type="submit" value="votosNao">Votos Não</button>
+				</div>
+			</div>
+		</div>
+  </div>
