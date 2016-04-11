@@ -43,7 +43,7 @@ function cepRequest() {
 
 
 function verifyLogin() {
-    var url = '../sessions/session.php';
+    var url = '../common/sessions/session.php';
     $.get(url, function(data, status) {
         valor = JSON.parse(data);
         if (valor == []) {

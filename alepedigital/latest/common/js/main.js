@@ -180,22 +180,26 @@ function yesNoEvent(arg1,arg3) {
 
     if (arg1.getAttribute("data-val") == "yes") { //if arg is the "sim" button
         arg2 = parent.getElementsByClassName("btn-alt-no")[0];
-        var url = 'db/DBLei.php';
+        var url = '../common/DB/DBLei.php';
         var data = {
             f: 'yesNoInsert',
             voto: 'votosNao',
             lei: parent.getAttribute("id"),
         }
-        $.post(url,data,teste);
+        $.post(url,data,function(data,status){
+          console.log(data);
+        });
     } else {
         arg2 = parent.getElementsByClassName("btn-alt-yes")[0];
-        var url = 'db/DBLei.php';
+        var url = '../common/DB/DBLei.php';
         var data = {
             f: 'yesNoInsert',
             voto: 'votosSim',
             lei: parent.getAttribute("id"),
         }
-        $.post(url,data,teste);
+        $.post(url,data,function(data,status){
+          console.log(data);
+        });
     }
 
     if (arg1.getAttribute("data-status") != 1) {
