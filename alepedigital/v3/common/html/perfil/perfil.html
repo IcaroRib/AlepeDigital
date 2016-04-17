@@ -1,0 +1,40 @@
+<div class="card-box" style="margin-bottom: 20px; padding: 0px; padding-left: 5px; background-color: #f5f5f5;">
+	<div class="page-perfil-spot">
+		<img id="user-perfil-pic" class="page-perfil-img" src="" />
+	</div>
+	<div class="page-perfil-info">
+		<h2 id="user-perfil-name">Guilherme Matheus</h2>
+		<div style="width:100%; margin-left: 30px;">
+			<div class="perfil-desc">
+				<em id="user-perfil-sex" style="color: #000;">Masculino</em>, 
+				<em id="user-perfil-age" style="color: #000;"><span>19</span> anos</em><br/>
+				<em id="user-perfil-adress" style="color: #000;">Paulista, Pernambuco</em><br/>
+				Usuário votou em <strong id="user-perfil-total-votos">1034</strong> projetos. <font id="user-perfil-votos-yes" color="green">740</font> sim, <font id="user-perfil-votos-no" color="red">294</font> não.
+				<br/>
+			</div>
+			<div class="edit-perfil-spot">
+				<a id="edit-perfil" href="" class="edit-perfil" data-toggle="tooltip" title="Editar informações de perfil">
+					<span class="glyphicon glyphicon-edit"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="margin-bottom: 30px; text-align: center;">
+	<button class="btn btn-xs btn-warning" onclick="$('#perfil-cards-seguidos').fadeIn(); $('#perfil-cards-votados').fadeIn();">
+		Exibir todos
+	</button>
+	<button class="btn btn-xs btn-primary" onclick="$('#perfil-cards-votados').fadeIn(); $('#perfil-cards-seguidos').fadeOut();">
+		Projetos votados
+	</button>
+	<button class="btn btn-xs btn-success" onclick="$('#perfil-cards-seguidos').fadeIn(); $('#perfil-cards-votados').fadeOut();">
+		Projetos seguidos
+	</button>
+	<button class="btn btn-xs btn-danger" onclick="$('#perfil-cards-seguidos').fadeOut(); $('#perfil-cards-votados').fadeOut();">
+		Esconder todos
+	</button>	
+</div>
+
+<div id="perfil-cards-votados" style="display: none;"></div>
+<div id="perfil-cards-seguidos" style="display: none;"></div>
