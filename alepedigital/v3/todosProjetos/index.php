@@ -1,76 +1,43 @@
 <?php
 
 	include_once("../common/tools/_tools.php");
+	include_once("../common/DB/conexaoDB.php");
+	include_once("../common/DB/loadDB.php");
 
-	$main = file_get_html(HTML_DIR."main.html");
+	$MAIN = file_get_html(HTML_DIR."main.html");
 	$FILTERS_TOP = file_get_html(HTML_TODOS_PROJETOS."filters_top.html");
 	$FILTERS_SIDE = file_get_html(HTML_TODOS_PROJETOS."filters_side.html");
-	$SCRIPTS = '<script type="text/javascript" src="../common/js/main.js"></script>';
+	$SCRIPTS = '<script type="text/javascript" src="../common/js/main.js"></script>
+				<script src="https://apis.google.com/js/platform.js" async defer> </script>
+				<script type="text/javascript" src="../common/js/cadastro.js"></script>';
+	
+	include("../common/sessions/recuperarSessao.php");
+
 //	--------------------------------------------------
-
-
-		// VERIFICAR SE USUÁRIO ESTÁ LOGADO ANTES DE CHAMAR A FUNÇÃO PARA ADCIONAR OS INTERESSES AO main,
-		// ir na função e recuperar valores do banco em função do user
 	
-//		if (!user_logged()) {
-//	 		kill_components($main->find(".logged"));
-//		}
-		
-//		else {
-			
-			$user_id = 000100;
-			$default_profile_img = "../common/img/profile.png"; //CASO O USUÁRIO N TENHA IMAGEM DE PERFIL SALVA, ESTA É A PADRÃO
-
-			kill_components($main->find(".not-logged"));	
-			$main->find("img[id=user-pic]",0)->src = "../common/img/profile.png";
-			$main->find("button[id=user-button]",0)->innertext .= "Guilherme"; // IMPORTANTE! POR APENAS O PRIMEIRO NOME!
-			$main->find("button[id=user-button-bar]",0)->innertext = "Guilherme"; // IMPORTANTE! POR APENAS O PRIMEIRO NOME!
-			$main->find("a[id=cadastro-edit-anchor]",0)->href .= $user_id; // id do usuário da sessão
-			$main->find("a[id=cadastro-edit-anchor-bar]",0)->href .= $user_id; // id do usuário da sessão
-			show_interesses($main);
-//		}
+// 	kill_components($MAIN->find(".logged"));	
 	
+	// VERIFICAR SE USUÁRIO ESTÁ LOGADO ANTES DE CHAMAR A FUNÇÃO PARA ADCIONAR OS INTERESSES AO MAIN,
+	// ir na função e recuperar valores do banco em função do user
+	//show_interesses($MAIN);
 
+//	-----------------------------------------------------
+	$conn = connect();
+	selectPartidos("");
+	desconnect($conn);
 
-	// Adiciona municípios às listas de filtros
-	foreach ($FILTERS_SIDE->find(".select-3") as $select){
-		$select->innertext .= '<option value="PT">PT</option>';
-		$select->innertext .= '<option value="PSDB">PSDB</option>';
-	}
-	foreach ($FILTERS_TOP->find(".select-3") as $select){
-		$select->innertext .= '<option value="PT">PT</option>';
-		$select->innertext .= '<option value="PSDB">PSDB</option>';
-	}
-
-
-	/*
-	$SELECT_PARTIDOS = $main->find(".select-3");
-	$SQL = "SELECT sigla FROM partido;";
-	$RETORNO = runQuery($SQL);
-	if ($RETORNO) {
-	 	while($row = mysql_fetch_assoc($RETORNO)) {
-	 		foreach ($SELECT_PARTIDOS as $select) {
-	 			$select->innertext .= '<option value="'.$row["sigla"].'">'.$row["sigla"].'</option>';
-	 		}
-	    }
-	}
-	unset($SQL,$RETORNO);
-	*/
-
-
+//	-----------------------------------------------------
 
 
 
 
 //	-----------------------------------------------------
-	$main->find("#painel-filtrar-top",0)->innertext = $FILTERS_TOP;
-	$main->find("#painel-filtrar-side",0)->innertext = $FILTERS_SIDE;
-	$main->find("html",0)->innertext .= $SCRIPTS;	
+	$MAIN->find("#painel-filtrar-top",0)->innertext = $FILTERS_TOP;
+	$MAIN->find("#painel-filtrar-side",0)->innertext = $FILTERS_SIDE;
+	$MAIN->find("html",0)->innertext .= $SCRIPTS;	
 //	-----------------------------------------------------
-
-	echo $main;
-
-
+	
+	echo $MAIN;
 
 
 ?>

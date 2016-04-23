@@ -2,6 +2,7 @@
  * GLOBALS
  */
 CURRENT_PAGE = 0;
+idUsuario = 0;
 
 
 function ptype2alt(){
@@ -165,44 +166,148 @@ function load_content(){
     chartSet();
 }
 
-function check_voted() {
-    
-}
+function check_logged(){
+   var url = '../common/sessions/session.php';
+   a = $.get(url, function(data, status) {
+      usuario = JSON.parse(data);
+      if (usuario.length == 0) {
+         idUsuario = 0;            
+      }
+      else{
+         idUsuario = usuario.id;      }
 
-function set_vote_yes(card,btn) {
+    }); 
+
+}
+function check_voted(card,btn,vote) {
+   if(idUsuario == 0){
+      alert("Você precisa estar logado para votar"); //Por favor mudar pra descer a barra de login
+    }
+    else{
+
+      var url = '../common/DB/DBLei.php';
+      var data = {
+         f2: 'selectVoto',
+         param1: idUsuario,
+         param2: card.getAttribute('id')
+      }
+      if (vote == 'yes'){
+         console.log(url);
+         $.post(url,data,function(data,status){
+               set_vote_yes(data,card,btn);
+            }
+         ); 
+      }
+      else if (vote == 'no'){
+         $.post(url,data,function(data,status){
+               set_vote_no(data,card,btn);
+            }
+         );    
+      }   
+   }
+}
+function set_vote_yes(voto,card,btn) {
     //CRIAR AJAX QUE ASSOSCIE O CARD AO USUÁRIO EM SESSÃO E ADD NO BANCO COM VOTO SIM e caso funcione, faz o que tem abaixo
     //---------------------
-    card.setAttribute("data-voted","1");
-    card.setAttribute("data-vote","1");
+    console.log(voto);
+    if(voto == '""'){
+      card.setAttribute("data-voted","1");
+      card.setAttribute("data-vote","1");
 
-    var btns = card.getElementsByClassName('btn');
+      var btns = card.getElementsByClassName('btn');
 
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].style.opacity = .25;
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].style.opacity = .25;
+      }
+      
+      btn.style.opacity = 1;
+
+      var url = '../common/DB/DBLei.php';
+      var data = {
+         f3: 'voto_usuario_Insert',
+         param1: idUsuario,
+         param2: card.getAttribute('id'),
+         param3: 'Sim'
+      }
+      $.post(url,data,function(data){console.log(data)});
+
     }
-    
-    btn.style.opacity = 1;
 
+    else if(voto == '"Nao"'){
+      card.setAttribute("data-voted","1");
+      card.setAttribute("data-vote","1");
+
+      var btns = card.getElementsByClassName('btn');
+
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].style.opacity = .25;
+      }
+      
+      btn.style.opacity = 1;
+      var url = '../common/DB/DBLei.php';
+      var data = {
+         f4: 'voto_usuario_Update',
+         param1: idUsuario,
+         param2: card.getAttribute('id'),
+         param3: 'Nao',
+         param4: 'Sim',
+      }
+
+      $.post(url,data,function(data){console.log(data)});
+
+   }
 //    card.style.backgroundColor = "#FFFFC9";
 
 
 }
 
-function set_vote_no(card,btn) {
-    //CRIAR AJAX QUE ASSOSCIE O CARD AO USUÁRIO EM SESSÃO E ADD NO BANCO COM VOTO NÃO e caso funcione, faz o que tem abaixo
-    // -----------------------
-    card.setAttribute("data-voted","1");
-    card.setAttribute("data-vote","0");
+function set_vote_no(voto,card,btn) {
+    if(voto == '""'){
+      card.setAttribute("data-voted","1");
+      card.setAttribute("data-vote","1");
 
-    var btns = card.getElementsByClassName('btn');
+      var btns = card.getElementsByClassName('btn');
 
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].style.opacity = .25;
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].style.opacity = .25;
+      }
+      
+      btn.style.opacity = 1;
+
+      var url = '../common/DB/DBLei.php';
+      var data = {
+         f3: 'voto_usuario_Insert',
+         param1: idUsuario,
+         param2: card.getAttribute('id'),
+         param3: 'Nao'
+      }
+      $.post(url,data,function(data){console.log(data)});
+
     }
 
-    btn.style.opacity = 1;
+    else if (voto == '"Sim"'){
+      card.setAttribute("data-voted","1");
+      card.setAttribute("data-vote","1");
 
-//    card.style.backgroundColor = "#FFFFC9";
+      var btns = card.getElementsByClassName('btn');
+
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].style.opacity = .25;
+      }
+      
+      btn.style.opacity = 1;
+      var url = '../common/DB/DBLei.php';
+      var data = {
+         f4: 'voto_usuario_Update',
+         param1: idUsuario,
+         param2: card.getAttribute('id'),
+         param3: 'Sim',
+         param4: 'Nao',
+      }
+      $.post(url,data,function(data){console.log(data)});
+
+
+    }
 
 }
 
@@ -456,7 +561,7 @@ $(document).ready(function() {
           ((window.location.href).indexOf("politicos/") < 0) &&
           ((window.location.href).indexOf("ranking/") < 0)
         ) {
-            check_voted();
+            check_logged();
     }
 
     if ((window.location.href).indexOf("cadastro/") >= 0) {

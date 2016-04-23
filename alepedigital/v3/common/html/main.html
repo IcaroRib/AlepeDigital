@@ -286,8 +286,11 @@
 	      <div class="modal-body">
 	      <center>
 		      	<form method="post">		      	
-			        <button class="btn btn-sm btn-primary">Login com Facebook</button>
-			        <button class="btn btn-sm btn-danger">Login com G+</button>
+			        <!-- <button class="btn btn-sm btn-primary">Login com Facebook</button> -->
+			        <meta name="google-signin-client_id" content="648376689398-rbkruvg0pf8r2q627ttfbsa7gcpl5olu.apps.googleusercontent.com">
+			        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+			        <!--<button class="btn btn-sm btn-danger">Login com G+</button>
+			        --> 
 			        <br/><br/><i>-- ou --</i><br/><br/>
 			        <form class="navbar-form">
 		            	<div class="form-group login-input">
