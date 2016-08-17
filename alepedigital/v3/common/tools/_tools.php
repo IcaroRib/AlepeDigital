@@ -51,7 +51,7 @@ function create_option_ages($min,$max) {
 }
 
 function kill_components($components)
-{	
+{
 	foreach ($components as $c) {
 		$c->style .= "display:none;";
 	}

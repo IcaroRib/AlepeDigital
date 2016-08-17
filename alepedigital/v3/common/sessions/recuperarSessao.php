@@ -12,7 +12,7 @@
 	//-----------------------------------------------------------------
 
 	if ($LOGGED == 1) {
-		kill_components($MAIN->find(".not-logged"));	
+		kill_components($MAIN->find(".not-logged"));
 
 		//-------------------------------------
 
@@ -22,6 +22,7 @@
 		}
 		$to_erase = substr($USER_FULL_NAME, strpos($USER_FULL_NAME, " ")); //parte do nome completo a ser apagada
 		$USER_FIRST_NAME = str_replace($to_erase, "", $USER_FULL_NAME);
+		$MAIN->find("div[id=ptype1-logged]",0)->style = "";
 		$MAIN->find("img[id=user-pic]",0)->src = $USER_IMG_SCR;
 		$MAIN->find("button[id=user-button]",0)->innertext .= $USER_FIRST_NAME; // IMPORTANTE! POR APENAS O PRIMEIRO NOME!
 		$MAIN->find("button[id=user-button-bar]",0)->innertext = $USER_FIRST_NAME; // IMPORTANTE! POR APENAS O PRIMEIRO NOME!

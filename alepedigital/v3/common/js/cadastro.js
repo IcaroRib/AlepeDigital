@@ -58,7 +58,7 @@ function verifyLogin() {
 function gerarSessao(data, status) {
     var user = jQuery.parseJSON(data);
     var url = '../common/sessions/gerarSessao.php';
-    $.post(url, user, function(data,status){location.reload();;});
+    $.post(url, user, function(data,status){location.reload();});
 }
 
 
@@ -66,14 +66,14 @@ function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     user = {
         insert: 'true',
-        gmailProfile: 'true',
+        profile: 'gmailProfile',
         IDGmail: profile.getId(),
         nome: profile.getName(),
         urlImage: profile.getImageUrl(),
         email: profile.getEmail()
     };
-    var url = '../common/DB/dbUser.php';
-    $.post(url, user, gerarSessao);
+    var url = '../rota/usuario.php';
+    $.post(url, user, function(data,status){location.reload();});
 
 }
 

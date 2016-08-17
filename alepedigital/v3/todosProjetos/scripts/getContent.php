@@ -1,27 +1,22 @@
 <?php
 
+include_once("../../dominio/Usuario.php");
 include_once("../../common/tools/_tools.php");
-include_once("../../common/DB/conexaoDB.php");
-include_once("../../common/DB/loadDB.php");
-
+include_once("../../formater/LeiCardFormater.php");
+include_once("../../DAO/leiDAO.php");
+include_once("../../common/utils/Conversor.php");
+include_once("../../dominio/LeiOrdinaria.php");
+include_once("../../dominio/Status.php");
+include_once("../../dominio/Deputado.php");
+include_once("../../dominio/Partido.php");
 
 $page = (!empty($_POST["page"])) ? $_POST['page'] : 0;
-$qt_cards = 9;
-$start = $qt_cards * $page;
-$cards = [];
-
-
-//Chamada do método que seleciona as leis
-//	-----------------------------------------------------
-$conn = connect();
-$cards = selectLeis($start,$qt_cards);
-desconnect($conn);
 
 //	-----------------------------------------------------
+$leiFormater = new LeiCardFormater($page);
+$leiFormater->preencherCards();
+$leiFormater->imprimirCards();
 
-foreach ($cards as $card) {
-	echo($card);
-}
-
+//	-----------------------------------------------------
 
 ?>

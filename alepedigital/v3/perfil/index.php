@@ -1,16 +1,12 @@
 <?php
 
-	/*
-
-		- é importante lembrar que o perfil de usuario e o perfil de político carregam integralmente, sem o scroll infinito (sem usar a função de load_page), ou seja, ele traz todos os cards seguidos e votados (no caso de perfil de usuário) e todas os porjetos do político de uma vez. sem scroll infininto.
-
-	*/
-
+	include_once("../common/tools/_tools.php");
+	include_once("../common/DB/conexaoDB.php");
+	include_once("../common/DB/loadDB.php");
 	include_once("../common/tools/_tools.php");
 
 	// para testar a página de perfil eu retirei a revificação de logado, mas lembrese de consertar
 	if (user_logged()) {
-//	if (!user_logged()) {
  		header("Location: ". HOME);
 	}
 	
@@ -23,6 +19,7 @@
 		$scripts = '<script type="text/javascript" src="../common/js/main.js"></script>';
 	//	----------------------------------------------------------------------------------------------------------------
 
+		include("../common/sessions/recuperarSessao.php");
 		$user_id = 000012; // Valor retornado da global session
 		$default_profile_img = "../common/img/profile.png"; //CASO O USUÁRIO N TENHA IMAGEM DE PERFIL SALVA, ESTA É A PADRÃO
 		kill_components($main->find(".not-logged"));	

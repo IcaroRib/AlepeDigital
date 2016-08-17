@@ -5,22 +5,51 @@
 	function selectLei($NUMERO_LEI){
 
 		global $conn;
-		global $CONTENT_HTML;
+		global $content;
 
-		$SQL = "SELECT numeroProposicao,resumo, sum(votosSim) as votosSim, sum(votosNao) as votosNao, nomePolitico, sigla
+		$SQL = "SELECT numeroProposicao,resumo, sum(votosSim) as votosSim, sum(votosNao) as votosNao, texto,
+                    nomePolitico, sigla, proposicao.url, situacaoTramite, dataPublicacao 
 					FROM lei_ordinaria INNER JOIN proposicao on lei_ordinaria.Proposicao_idProposicao = proposicao.idProposicao
 					INNER JOIN deputado ON deputado.idDeputado = proposicao.idDeputado
+					INNER JOIN status ON status.idStatus = proposicao.idStatus
 					INNER JOIN partido on deputado.idPartido = partido.idPartido
-					WHERE numeroProposicao = $NUMERO_LEI";
+					WHERE numeroProposicao like '%$NUMERO_LEI%'";
 
 		$RETORNO = mysqli_query($conn, $SQL);
+        echo $SQL;  
 		if ($RETORNO) {
 		 	while($row = mysqli_fetch_assoc($RETORNO)) {
 
-		 		$CONTENT_HTML->find('p[class=p-btn-yes-no]', 0)->id = $row['numeroProposicao'];
-				$CONTENT_HTML->find('button[id=btn-lei-yes]', 0)->{'data-parent-id'} = $row['numeroProposicao'];
-				$CONTENT_HTML->find('button[id=btn-lei-no]', 0)->{'data-parent-id'} = $row['numeroProposicao'];
-		 	 	$CONTENT_HTML->find('a[id=a-nomePol]', 0)->{'data-card-id'} = $row['nomePolitico'];
+                $nome_candidato = $row['nomePolitico'];
+                $resumo = $row['resumo'];
+                $url = $row['url'];
+                $texto = $row['texto'];
+                $situacao = $row['situacaoTramite'];
+                $data = $row['dataPublicacao'];
+                $partido = $row['sigla'];
+                $votosSim = $row['votosSim'];
+                $votosNao = $row['votosNao'];
+                $totalVotos = $votosSim + $votosNao;
+
+                $content->find('div[id=porjeto-corpus]', 0)->{'data-voted'} = 0; //REPRESENTA LEI VOTADA
+                $content->find('div[id=porjeto-corpus]', 0)->{'data-vote'} = ""; //REPRESENTA O VOTO 1 = SIM 0 = NÃO
+                $content->find('h2[class=lei-desc-curta]', 0)->innertext = $resumo;
+                //$content->find('img[class=lei-img-pol]', 0)->src = "https://pbs.twimg.com/profile_images/526853273546788864/xAkXA8V8.jpeg";
+                $content->find('a[id=a-nomePol]', 0)->innertext = $nome_candidato;
+                $content->find("a[id=a-nomePol]",0)->href = POLITICO . "?nome=" . $nome_candidato;
+                $content->find('p[class=lei-pol] strong', 0)->innertext = $partido; //SIGLA DO PARTIDO
+                $content->find('p[class=lei-pol] em', 0)->innertext = $data; //DATA DE SUBMISSÃO
+                //$content->find('p[class=lei-info] strong', 0)->innertext = "Complementar"; //TIPO DO PROJETO
+                $content->find('p[class=lei-info] strong', 1)->innertext = $situacao; //SITUAÇÃO
+                // $content->find('p[class=lei-info] strong', 2)->innertext = "Saúde"; //CATEGORIA
+                $content->find('p[class=lei-info] a', 0)->href = $url; //LINK PUBLICACAO NA ÍNTEGRA
+                //$content->find('a[id=seguir-projeto]', 0)->{'data-status'} = ($status_following === true) ? '1' : '0';
+                //$content->find('a[id=seguir-projeto]', 0)->{'onclick'} = "follow_project($num_prop)"; //FUNÇÃO PARA ADICIONAR ASSOCIAÇÃO USUARIO_POSTAGEMSEGUIDA NO BANCO, UTILIZA-SE DOS DADOS SALVAOS NA SEÇÃO
+                //$content->find('img[class=lei-img]', 0)->src = "http://votenaweb.s3-sa-east-1.amazonaws.com/bills/images/8163/original/votenaweb_MP-692-2015.jpg?1447263935";
+                $content->find('p[class=lei-desc-longa]', 0)->innertext =  $texto . "<br/><br/><strong>Fonte:</strong>" . $url; //LINK PUBLICACAO NA ÍNTEGRA
+                $content->find('p[class=p-alt-politico] font[color=black]', 0)->innertext = $totalVotos; //TOTAL DE VOTOS
+                $content->find('p[class=p-alt-politico] font[color=green]', 0)->innertext = $votosSim; //VOTOS SIM
+                $content->find('p[class=p-alt-politico] font[color=red]', 0)->innertext = $votosNao; //VOTOS NAO
 
  	 		break;
 		 	}
@@ -136,6 +165,7 @@
 					$CONTENT_HTML->find('h4[id=card-name]', 0)->innertext = '<span class="label label-default">' . $row["numeroProposicao"] . '</span>';
 					//$CONTENT_HTML->find('h4[id=card-seg]', 0)->innertext = '<span class="label label-primary">Em breve</span>';
 					$CONTENT_HTML->find('p[id=card-desc]', 0)->innertext = $row["resumo"];
+					$CONTENT_HTML->find('a', 0)->{'href'} = "../projeto/index.php?num=".$row["numeroProposicao"];
 					$CONTENT_HTML->find('p[id=card-desc]', 0)->{'data-val'}= "projeto:".$row["numeroProposicao"];
 					$CONTENT_HTML->find('p[id=card-desc]', 0)->{'data-card-id'} = $row["numeroProposicao"];
 					$CONTENT_HTML->find('img[id=card-politico-img]', 0)->src = '';
